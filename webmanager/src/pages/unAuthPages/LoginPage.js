@@ -2,16 +2,18 @@ import styled from "styled-components";
 import { Button, Input, Form } from "antd";
 import { useDispatch } from "react-redux";
 import { loginAction } from './store/actionCreators'
+import { useNavigate } from 'react-router-dom'
 
 
 const LoginPage = (props) => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
     try {
       console.log(values);
       dispatch(loginAction(values));
+      navigate("breif");
     } catch (error) {
     }
   };

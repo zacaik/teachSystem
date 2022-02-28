@@ -1,8 +1,8 @@
 import { Loading } from "./components";
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
-import store from "./store";
-import { Provider, useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const AuthPage = React.lazy(() => import("./pages/authPages"));
 const UnAutnPage = React.lazy(() => import("./pages/unAuthPages"));
@@ -14,6 +14,15 @@ function App() {
     shallowEqual
   );
   console.log(user);
+
+  const navigate = useNavigate();
+
+  // 当用户状态失效后，清空路由
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user]);
 
   return (
     <div className="App">
