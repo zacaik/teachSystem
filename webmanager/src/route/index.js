@@ -1,6 +1,6 @@
-import Recruit from "../pages/Recruit";
-import { Redirect } from "react-router-dom";
 import Brief from "../pages/Breif";
+import Course from "../pages/Course";
+import Grade from "../pages/Grade";
 
 const routes = [
   // {
@@ -13,8 +13,12 @@ const routes = [
     component: Brief,
   },
   {
-    path: "/recruit",
-    component: Recruit,
+    path: "/course",
+    component: Course,
+  },
+  {
+    path: "/grade",
+    component: Grade,
   },
 ];
 

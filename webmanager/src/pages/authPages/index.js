@@ -5,17 +5,18 @@ import {
   PieChartOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import manageLogo from "../../assets/img/manage-logo.png";
 import { ManageWrapper } from "./style";
-import { NavLink, Link, BrowserRouter, Routes, Route } from "react-router-dom";
+import { Link, Routes, Route } from "react-router-dom";
 import MyHeader from "../../components/MyHeader";
-import Recruit from "../Recruit";
 import Brief from "../Breif";
+import Course from "../Course";
+import Grade from "../Grade";
+import ClassInteraction from "../ClassInteraction";
 
 const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
+// const { SubMenu } = Menu;
 
-export default memo(function AuthPage(props) {
+export default memo(function AuthPage (props) {
   const [collapsed, setCollapsed] = useState(false);
 
   const onCollapse = (collapsed) => {
@@ -42,17 +43,13 @@ export default memo(function AuthPage(props) {
               <Link to="/breif">总览</Link>
             </Menu.Item>
             <Menu.Item key="2" icon={<DesktopOutlined />}>
-              <Link to="/recruit">员工管理</Link>
+              <Link to="/course">课程管理</Link>
             </Menu.Item>
-            <Menu.Item key="3" icon={<DesktopOutlined />}>
-              {/* <NavLink to="/management/task">任务管理</NavLink> */}
+            <Menu.Item key="3" icon={<TeamOutlined />}>
+              <Link to="/grade">成绩管理</Link>
             </Menu.Item>
-            <SubMenu key="sub2" icon={<TeamOutlined />} title="任务分配">
-              <Menu.Item key="6">Team 1</Menu.Item>
-              <Menu.Item key="8">Team 2</Menu.Item>
-            </SubMenu>
-            <Menu.Item key="9" icon={<TeamOutlined />}>
-              {/* <NavLink to="/management/recruit">招聘广场</NavLink> */}
+            <Menu.Item key="4" icon={<TeamOutlined />}>
+              <Link to="/classInteraction">课堂互动</Link>
             </Menu.Item>
           </Menu>
         </Sider>
@@ -63,7 +60,9 @@ export default memo(function AuthPage(props) {
           <Content style={{ margin: "0 16px" }}>
             <Routes>
               <Route path="/breif" element={<Brief />} />
-              <Route path="/recruit" element={<Recruit />} />
+              <Route path="/course" element={<Course />} />
+              <Route path="/grade" element={<Grade />} />
+              <Route path="/classInteraction" element={<ClassInteraction />} />
             </Routes>
           </Content>
           <Footer style={{ textAlign: "center" }}>
