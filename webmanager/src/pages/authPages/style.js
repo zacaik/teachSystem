@@ -6,16 +6,24 @@ export const ManageWrapper = styled.div`
       background-color: #fff;
       .logo {
         display: flex;
-        background-color: #fff;
+        background-color: #001628;
+        height: 66px;
         .title {
-          margin-top: 5px;
           h3 {
             margin: 0;
-            font-weight: bolder;
+            margin-left: 20px;
+            width: 110px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 32px
           }
         }
         img {
-          margin: 10px;
+          /* margin: 10px; */
+          margin-top: 12px;
+          margin-left: 15px;
+          height: 40px;
         }
       }
     }

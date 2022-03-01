@@ -31,10 +31,10 @@ export default memo(function AuthPage(props) {
           className="sider"
         >
           <div className="logo">
-            <img src={manageLogo} alt="" />
+            <img src={'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'} alt="" />
             <div className="title">
-              <h3>Personal</h3>
-              <h3>Management</h3>
+              <h3>SmartClass</h3>
+              <h3>后台管理系统</h3>
             </div>
           </div>
           <Menu theme="light" defaultSelectedKeys={["1"]} mode="inline">
@@ -67,7 +67,7 @@ export default memo(function AuthPage(props) {
             </Routes>
           </Content>
           <Footer style={{ textAlign: "center" }}>
-            Personal Management ©2021 Created by HHU
+            SmartClass Management ©2022 Created by HHU
           </Footer>
         </Layout>
       </Layout>
