@@ -1,34 +1,56 @@
 import { Loading } from "./components";
 import React, { useEffect } from "react";
 import "./App.css";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setUserAction } from "./pages/unAuthPages/store/actionCreators";
+import { http } from "./utils/http";
 
 const AuthPage = React.lazy(() => import("./pages/authPages"));
-const UnAutnPage = React.lazy(() => import("./pages/unAuthPages"));
+const UnAuthPage = React.lazy(() => import("./pages/unAuthPages"));
 
 function App() {
-  const { user } = useSelector((state) => ({
-      user: state.user.user
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  let { user } = useSelector(
+    (state) => ({
+      user: state.user.user,
     }),
     shallowEqual
   );
-  console.log(user);
 
-  const navigate = useNavigate();
+  const bootStrapUser = async () => {
+    let data = null;
+    const token = localStorage.getItem("__auth-provider-token__");
+    if (token) {
+      // data = await http("user", { token });
+      data = 111;
+    }
+    dispatch(setUserAction(data));
+    return data;
+  };
 
-  // 当用户状态失效后，清空路由
+  useEffect(() => {
+    if (!user) {
+      bootStrapUser().then((res) => {
+        user = res;
+      });
+    }
+  }, []);
+
   useEffect(() => {
     if (!user) {
       navigate("/");
+    } else {
+      navigate("/brief");
     }
   }, [user]);
 
   return (
     <div className="App">
-        <React.Suspense fallback={<Loading />}>
-          {user ? <AuthPage /> : <UnAutnPage />}
-        </React.Suspense>
+      <React.Suspense fallback={<Loading />}>
+        {user ? <AuthPage /> : <UnAuthPage />}
+      </React.Suspense>
     </div>
   );
 }

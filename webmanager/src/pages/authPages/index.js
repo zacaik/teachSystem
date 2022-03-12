@@ -59,7 +59,7 @@ export default memo(function AuthPage (props) {
           </Header>
           <Content style={{ margin: "0 16px" }}>
             <Routes>
-              <Route path="/breif" element={<Brief />} />
+              <Route path="/brief" element={<Brief />} />
               <Route path="/course" element={<Course />} />
               <Route path="/grade" element={<Grade />} />
               <Route path="/classInteraction" element={<ClassInteraction />} />
