@@ -67,5 +67,13 @@
     "软件开发环境18级1-3班",
     "软件开发环境18级4-6班",
     "软件开发环境辅修"
-  ]
+  ],
+  "getStudentSummary": {
+    "sum": 120,
+    "male": 80,
+    "female": 40,
+    "classOne": 40,
+    "classTow": 20,
+    "classThree": 60
+  }
 }

@@ -1,19 +1,21 @@
 import React, { memo, useEffect, useState } from "react";
 import { BriefWrapper } from "./style";
-import { Select, Card, Button, Statistic, Row, Col } from "antd";
+import { Select, Card, Button, Statistic, Table } from "antd";
 import { TeamOutlined } from "@ant-design/icons";
 import { http } from "../../utils/http";
-import { Pie } from "@ant-design/plots";
+import { Pie, Column } from "@ant-design/plots";
 
 const Brief = memo(() => {
   const { Option } = Select;
 
   const [classList, setClassList] = useState([]);
+  const [studentSummary, setStudentSummary] = useState({});
 
   const getData = async () => {
-    const res = await http("classList", {});
-    setClassList(res);
-    console.log(res);
+    const classlist = await http("classList", {});
+    const studentSummary = await http("getStudentSummary", {});
+    setStudentSummary(studentSummary);
+    setClassList(classlist);
   };
 
   useEffect(() => {
@@ -23,26 +25,26 @@ const Brief = memo(() => {
   const genderData = [
     {
       type: "男生",
-      value: 65,
+      value: studentSummary?.male,
     },
     {
       type: "女生",
-      value: 35,
+      value: studentSummary?.female,
     },
   ];
 
   const studentData = [
     {
       type: "一班人数",
-      value: 56,
+      value: studentSummary?.classOne,
     },
     {
       type: "二班人数",
-      value: 45,
+      value: studentSummary?.classTow,
     },
     {
       type: "三班人数",
-      value: 35,
+      value: studentSummary?.classThree,
     },
   ];
 
@@ -67,6 +69,148 @@ const Brief = memo(() => {
       },
     ],
   };
+
+  const attendanceData = [
+    {
+      type: "已签到",
+      date: "3-1",
+      value: 108,
+    },
+    {
+      type: "已签到",
+      date: "3-7",
+      value: 104,
+    },
+    {
+      type: "已签到",
+      date: "3-14",
+      value: 99,
+    },
+    {
+      type: "已签到",
+      date: "3-21",
+      value: 100,
+    },
+    {
+      type: "已签到",
+      date: "3-28",
+      value: 110,
+    },
+    {
+      type: "已签到",
+      date: "4-4",
+      value: 112,
+    },
+    {
+      type: "未签到",
+      date: "3-1",
+      value: 12,
+    },
+    {
+      type: "未签到",
+      date: "3-7",
+      value: 16,
+    },
+    {
+      type: "未签到",
+      date: "3-14",
+      value: 21,
+    },
+    {
+      type: "未签到",
+      date: "3-21",
+      value: 20,
+    },
+    {
+      type: "未签到",
+      date: "3-28",
+      value: 10,
+    },
+    {
+      type: "未签到",
+      date: "4-4",
+      value: 8,
+    },
+  ];
+
+  const attendanceConfig = {
+    data: attendanceData,
+    width: 1000,
+    xField: "date",
+    yField: "value",
+    seriesField: "type",
+    isPercent: true,
+    isStack: true,
+    label: {
+      position: "middle",
+      content: (item) => {
+        return item.value.toFixed(2);
+      },
+      style: {
+        fill: "#fff",
+      },
+    },
+    ShapeAttrs: {
+      type: "vertical",
+      width: 1000,
+      categorySize: 100,
+      animate: true,
+    },
+  };
+
+  const columns = [
+    {
+      title: "姓名",
+      dataIndex: "name",
+    },
+    {
+      title: "学号",
+      dataIndex: "studentId",
+    },
+    {
+      title: "未打卡次数",
+      dataIndex: "absentNumber",
+    },
+  ];
+
+  const absentData = [
+    {
+      key: "1",
+      name: "李俊燃",
+      studentId: "1806010228",
+      absentNumber: 10,
+    },
+    {
+      key: "1",
+      name: "李俊燃",
+      studentId: "1806010228",
+      absentNumber: 9,
+    },
+    {
+      key: "1",
+      name: "李俊燃",
+      studentId: "1806010228",
+      absentNumber: 8,
+    },
+    {
+      key: "1",
+      name: "李俊燃",
+      studentId: "1806010228",
+      absentNumber: 7,
+    },
+    {
+      key: "1",
+      name: "李俊燃",
+      studentId: "1806010228",
+      absentNumber: 6,
+    },
+    {
+      key: "1",
+      name: "李俊燃",
+      studentId: "1806010228",
+      absentNumber: 5,
+    },
+  ];
 
   return (
     <BriefWrapper>
@@ -99,13 +243,13 @@ const Brief = memo(() => {
           <div className="static-number">
             <Statistic
               title="男生人数"
-              value={80}
+              value={studentSummary.male}
               prefix={<TeamOutlined />}
               className="static-number-item"
             />
             <Statistic
               title="女生人数"
-              value={40}
+              value={studentSummary.female}
               prefix={<TeamOutlined />}
               className="static-number-item"
             />
@@ -118,25 +262,25 @@ const Brief = memo(() => {
           <div className="static-number">
             <Statistic
               title="班级总人数"
-              value={128}
+              value={studentSummary.sum}
               prefix={<TeamOutlined />}
               className="static-number-item"
             />
             <Statistic
               title="二班人数"
-              value={28}
+              value={studentSummary.classTow}
               prefix={<TeamOutlined />}
               className="static-number-item"
             />
             <Statistic
               title="三班人数"
-              value={28}
+              value={studentSummary.classThree}
               className="static-number-item"
               prefix={<TeamOutlined />}
             />
             <Statistic
               title="一班人数"
-              value={28}
+              value={studentSummary.classOne}
               className="static-number-item"
               prefix={<TeamOutlined />}
             />
@@ -144,6 +288,24 @@ const Brief = memo(() => {
           <div className="pieWrapper">
             <Pie {...config} data={studentData} />
           </div>
+        </div>
+      </Card>
+      <Card
+        className="attendanceSummary"
+        title="学生出勤概况"
+        style={{ width: "100%", marginTop: "20px" }}
+      >
+        <div className="columnWrapper" style={{ width: "70%" }}>
+          <Column {...attendanceConfig} />
+        </div>
+        <div className="topAbsentStudent">
+          <Table
+            columns={columns}
+            dataSource={absentData}
+            bordered
+            pagination={false}
+            title={() => "缺勤排行榜"}
+          />
         </div>
       </Card>
     </BriefWrapper>
