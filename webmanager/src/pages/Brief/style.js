@@ -12,7 +12,6 @@ export const BriefWrapper = styled.div`
   .class-summary > .ant-card-body {
     display: flex;
     flex-direction: row;
-    /* justify-content: space-between; */
     .gender-proportion {
       width: 50%;
       display: flex;
@@ -40,6 +39,14 @@ export const BriefWrapper = styled.div`
       flex-direction: column;
       justify-content: center;
       align-items: center;
+    }
+  }
+
+  .attendanceSummary > .ant-card-body {
+    display: flex;
+    flex-direction: row;
+    .topAbsentStudent {
+      margin-left: 100px;
     }
   }
 `;
