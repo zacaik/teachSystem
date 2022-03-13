@@ -8,7 +8,7 @@ import {
 import { ManageWrapper } from "./style";
 import { Link, Routes, Route } from "react-router-dom";
 import MyHeader from "../../components/MyHeader";
-import Brief from "../Breif";
+import Brief from "../Brief";
 import Course from "../Course";
 import Grade from "../Grade";
 import ClassInteraction from "../ClassInteraction";
@@ -40,7 +40,7 @@ export default memo(function AuthPage (props) {
           </div>
           <Menu theme="light" defaultSelectedKeys={["1"]} mode="inline">
             <Menu.Item key="1" icon={<PieChartOutlined />}>
-              <Link to="/breif">总览</Link>
+              <Link to="/brief">总览</Link>
             </Menu.Item>
             <Menu.Item key="2" icon={<DesktopOutlined />}>
               <Link to="/course">课程管理</Link>

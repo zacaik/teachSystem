@@ -5,7 +5,7 @@ import "antd/dist/antd.css";
 import '@ant-design/pro-layout/dist/layout.less';
 import store from "./store";
 import { Provider } from "react-redux";
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <Provider store={store}>

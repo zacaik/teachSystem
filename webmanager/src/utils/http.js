@@ -16,8 +16,10 @@ export const http = async (
     ...customConfig,
   };
 
-  if (config.method.toUpperCase() === "GET") {
-    url = `${url}?${qs.stringify(data)}`;
+  if (config.method.toUpperCase() === "GET" ) {
+    if (data) {
+      url = `${url}?${qs.stringify(data)}`;
+    }
   } else {
     config.body = JSON.stringify(data || {});
   }
