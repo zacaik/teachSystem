@@ -150,11 +150,45 @@ const Brief = memo(() => {
         fill: "#fff",
       },
     },
-    ShapeAttrs: {
-      type: "vertical",
-      width: 1000,
-      categorySize: 100,
-      animate: true,
+    scrollbar: {
+      type: 'horizontal',
+    },
+  };
+
+  const testData = [
+    {
+      "score": "0-20",
+      "人数": 10
+    },{
+      "score": "20-40",
+      "人数": 30
+    },
+    {
+      "score": "40-60",
+      "人数": 25
+    },
+    {
+      "score": "60-80",
+      "人数": 67
+    },
+    {
+      "score": "80-90",
+      "人数": 31
+    },
+    {
+      "score": "90-100",
+      "人数": 12
+    },
+  ]
+
+  const testConfig = {
+    data: testData,
+    xField: 'score',
+    yField: '人数',
+    xAxis: {
+      label: {
+        autoRotate: false,
+      },
     },
   };
 
@@ -297,6 +331,24 @@ const Brief = memo(() => {
       >
         <div className="columnWrapper" style={{ width: "70%" }}>
           <Column {...attendanceConfig} />
+        </div>
+        <div className="topAbsentStudent">
+          <Table
+            columns={columns}
+            dataSource={absentData}
+            bordered
+            pagination={false}
+            title={() => "缺勤排行榜"}
+          />
+        </div>
+      </Card>
+      <Card
+        className="testSummary"
+        title="课堂测验概况"
+        style={{ width: "100%", marginTop: "20px" }}
+      >
+        <div className="columnWrapper" style={{ width: "70%" }}>
+          <Column {...testConfig} />
         </div>
         <div className="topAbsentStudent">
           <Table
