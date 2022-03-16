@@ -321,12 +321,14 @@ const Brief = memo(() => {
               value={studentSummary.male}
               prefix={<TeamOutlined />}
               className="static-number-item"
+              key={"male"}
             />
             <Statistic
               title="女生人数"
               value={studentSummary.female}
               prefix={<TeamOutlined />}
               className="static-number-item"
+              key={"female"}
             />
           </div>
           <div className="pieWrapper">
@@ -340,24 +342,28 @@ const Brief = memo(() => {
               value={studentSummary.sum}
               prefix={<TeamOutlined />}
               className="static-number-item"
+              key={"all"}
             />
             <Statistic
               title="二班人数"
               value={studentSummary.classTow}
               prefix={<TeamOutlined />}
               className="static-number-item"
+              key={"tow"}
             />
             <Statistic
               title="三班人数"
               value={studentSummary.classThree}
               className="static-number-item"
               prefix={<TeamOutlined />}
+              key={"three"}
             />
             <Statistic
               title="一班人数"
               value={studentSummary.classOne}
               className="static-number-item"
               prefix={<TeamOutlined />}
+              key={"one"}
             />
           </div>
           <div className="pieWrapper">
@@ -389,7 +395,7 @@ const Brief = memo(() => {
         style={{ width: "100%", marginTop: "20px" }}
       >
         <div className="columnWrapper" style={{ width: "40%" }}>
-          <h3 class="test-title">知识测验成绩分段：</h3>
+          <h3 className="test-title">知识测验成绩分段：</h3>
           <div className="selecter-wrapper">
             <div className="selecter-item">
               选择课程：
@@ -419,7 +425,7 @@ const Brief = memo(() => {
           <Column {...testConfig} />
         </div>
         <div className="qaBarWrapper" style={{ width: "40%" }}>
-          <h3 class="test-title">课堂参与度统计：</h3>
+          <h3 className="test-title">课堂参与度统计：</h3>
           <div className="selecter-item">
             选择课程：
             <Select defaultValue={classList[0]} style={{ width: 200 }}>
