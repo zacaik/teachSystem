@@ -3,7 +3,7 @@ import { BriefWrapper } from "./style";
 import { Select, Card, Button, Statistic, Table } from "antd";
 import { TeamOutlined } from "@ant-design/icons";
 import { http } from "../../utils/http";
-import { Pie, Column } from "@ant-design/plots";
+import { Pie, Column, Bar } from "@ant-design/plots";
 
 const Brief = memo(() => {
   const { Option } = Select;
@@ -151,40 +151,41 @@ const Brief = memo(() => {
       },
     },
     scrollbar: {
-      type: 'horizontal',
+      type: "horizontal",
     },
   };
 
   const testData = [
     {
-      "score": "0-20",
-      "人数": 10
-    },{
-      "score": "20-40",
-      "人数": 30
+      score: "20分以下",
+      人数: 10,
     },
     {
-      "score": "40-60",
-      "人数": 25
+      score: "20-40分",
+      人数: 30,
     },
     {
-      "score": "60-80",
-      "人数": 67
+      score: "40-60分",
+      人数: 25,
     },
     {
-      "score": "80-90",
-      "人数": 31
+      score: "60-80分",
+      人数: 67,
     },
     {
-      "score": "90-100",
-      "人数": 12
+      score: "80-90分",
+      人数: 31,
     },
-  ]
+    {
+      score: "90分以上",
+      人数: 12,
+    },
+  ];
 
   const testConfig = {
     data: testData,
-    xField: 'score',
-    yField: '人数',
+    xField: "score",
+    yField: "人数",
     xAxis: {
       label: {
         autoRotate: false,
@@ -245,6 +246,46 @@ const Brief = memo(() => {
       absentNumber: 5,
     },
   ];
+
+  const qaData = [
+    {
+      date: "3-1",
+      "参与度": 0.93,
+    },
+    {
+      date: "3-7",
+      "参与度": 0.87,
+    },
+    {
+      date: "3-14",
+      "参与度": 0.96,
+    },
+    {
+      date: "3-21",
+      "参与度": 0.67,
+    },
+    {
+      date: "3-28",
+      "参与度": 0.78,
+    },
+    {
+      date: "4-4",
+      "参与度": 0.97,
+    },
+  ];
+  const qaConfig = {
+    data: qaData,
+    xField: "参与度",
+    yField: "date",
+    yAxis: {
+      label: {
+        autoRotate: false,
+      },
+    },
+    scrollbar: {
+      type: 'vertical',
+    },
+  };
 
   return (
     <BriefWrapper>
@@ -344,20 +385,54 @@ const Brief = memo(() => {
       </Card>
       <Card
         className="testSummary"
-        title="课堂测验概况"
+        title="成绩概况"
         style={{ width: "100%", marginTop: "20px" }}
       >
-        <div className="columnWrapper" style={{ width: "70%" }}>
+        <div className="columnWrapper" style={{ width: "40%" }}>
+          <h3 class="test-title">知识测验成绩分段：</h3>
+          <div className="selecter-wrapper">
+            <div className="selecter-item">
+              选择课程：
+              <Select defaultValue={classList[0]} style={{ width: 200 }}>
+                {classList.map((item) => {
+                  return (
+                    <Option value={item} key={item}>
+                      {item}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </div>
+            <div className="selecter-item">
+              选择测验：
+              <Select defaultValue={classList[0]} style={{ width: 200 }}>
+                {classList.map((item) => {
+                  return (
+                    <Option value={item} key={item}>
+                      {item}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </div>
+          </div>
           <Column {...testConfig} />
         </div>
-        <div className="topAbsentStudent">
-          <Table
-            columns={columns}
-            dataSource={absentData}
-            bordered
-            pagination={false}
-            title={() => "缺勤排行榜"}
-          />
+        <div className="qaBarWrapper" style={{ width: "40%" }}>
+          <h3 class="test-title">课堂参与度统计：</h3>
+          <div className="selecter-item">
+            选择课程：
+            <Select defaultValue={classList[0]} style={{ width: 200 }}>
+              {classList.map((item) => {
+                return (
+                  <Option value={item} key={item}>
+                    {item}
+                  </Option>
+                );
+              })}
+            </Select>
+          </div>
+          <Bar {...qaConfig} />
         </div>
       </Card>
     </BriefWrapper>

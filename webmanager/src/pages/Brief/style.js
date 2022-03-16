@@ -3,7 +3,7 @@ export const BriefWrapper = styled.div`
   width: 100%;
   padding: 20px;
   .ant-card-body {
-    margin: 20px 0;
+    padding: 20px 20px 20px;
   }
   .classSelect {
     margin-top: 20px;
@@ -47,6 +47,21 @@ export const BriefWrapper = styled.div`
     flex-direction: row;
     .topAbsentStudent {
       margin-left: 100px;
+    }
+  }
+
+  .testSummary > .ant-card-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .selecter-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    .selecter-item {
+      width: 300px;
     }
   }
 `;
