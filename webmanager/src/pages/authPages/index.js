@@ -10,13 +10,14 @@ import { Link, Routes, Route } from "react-router-dom";
 import MyHeader from "../../components/MyHeader";
 import Brief from "../Brief";
 import Course from "../Course";
-import Grade from "../Grade";
+import Student from "../Student";
 import ClassInteraction from "../ClassInteraction";
+import StudentDetail from "../Student/details";
 
 const { Header, Content, Footer, Sider } = Layout;
 // const { SubMenu } = Menu;
 
-export default memo(function AuthPage (props) {
+export default memo(function AuthPage(props) {
   const [collapsed, setCollapsed] = useState(false);
 
   const onCollapse = (collapsed) => {
@@ -32,7 +33,12 @@ export default memo(function AuthPage (props) {
           className="sider"
         >
           <div className="logo">
-            <img src={'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'} alt="" />
+            <img
+              src={
+                "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+              }
+              alt=""
+            />
             <div className="title">
               <h3>SmartClass</h3>
               <h3>后台管理系统</h3>
@@ -46,7 +52,7 @@ export default memo(function AuthPage (props) {
               <Link to="/course">课程管理</Link>
             </Menu.Item>
             <Menu.Item key="3" icon={<TeamOutlined />}>
-              <Link to="/grade">成绩管理</Link>
+              <Link to="/student">学生管理</Link>
             </Menu.Item>
             <Menu.Item key="4" icon={<TeamOutlined />}>
               <Link to="/classInteraction">课堂互动</Link>
@@ -59,10 +65,11 @@ export default memo(function AuthPage (props) {
           </Header>
           <Content style={{ margin: "0 16px" }}>
             <Routes>
-              <Route path="/brief" element={<Brief />} key={1}/>
-              <Route path="/course" element={<Course />} key={2}/>
-              <Route path="/grade" element={<Grade />} key={3}/>
-              <Route path="/classInteraction" element={<ClassInteraction />} key={4}/>
+              <Route path="/brief" element={<Brief />} />
+              <Route path="/course" element={<Course />} />
+              <Route path="/student" element={<Student />} exact/>
+              <Route path="/student/detail/:id" element={<StudentDetail />} />
+              <Route path="/classInteraction" element={<ClassInteraction />} />
             </Routes>
           </Content>
           <Footer style={{ textAlign: "center" }}>

@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { Table, Button, Modal } from "antd";
+import { Table, Button, Modal, message } from "antd";
 import { CourseWrapper } from "./style";
 
 const Course = memo(() => {
@@ -86,7 +86,6 @@ const Course = memo(() => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const showModal = (type) => {
-    console.log(1)
     switch (type) {
       case 1:
         setIsAddModalVisible(true);
@@ -112,6 +111,7 @@ const Course = memo(() => {
         break;
       case 3:
         setIsDeleteModalVisible(false);
+        success();
         break;
       default:
         break;
@@ -134,28 +134,54 @@ const Course = memo(() => {
     }
   };
 
+  function success () {
+    message.success('删除成功');
+
+  }
+
   return (
     <CourseWrapper>
       <div className="actionWrapper">
-        <Button type="primary" style={{ marginBottom: "10px" }} onClick={() => showModal(1)}>
+        <Button
+          type="primary"
+          style={{ marginBottom: "10px" }}
+          onClick={() => showModal(1)}
+        >
           新增课程
         </Button>
       </div>
       <Table columns={columns} dataSource={data} />
-      <Modal title="新增课程" visible={isAddModalVisible} onOk={() => handleOk(1)} onCancel={() => handleCancel(1)}>
+      <Modal
+        title="新增课程"
+        visible={isAddModalVisible}
+        onOk={() => handleOk(1)}
+        onCancel={() => handleCancel(1)}
+      >
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
       </Modal>
-      <Modal title="编辑课程" visible={isEditModalVisible} onOk={() => handleOk(2)} onCancel={() => handleCancel(2)}>
+      <Modal
+        title="编辑课程"
+        visible={isEditModalVisible}
+        onOk={() => handleOk(2)}
+        onCancel={() => handleCancel(2)}
+      >
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
       </Modal>
-      <Modal title="删除课程" visible={isDeleteModalVisible} onOk={() => handleOk(3)} onCancel={() => handleCancel(3)}>
+      <Modal
+        title="删除课程"
+        visible={isDeleteModalVisible}
+        footer={[
+          <Button onClick={() => handleCancel(3)}>
+            取消
+          </Button>,
+          <Button onClick={() => handleOk(3)} type="primary">确定</Button>,
+        ]}
+      >
         <p>你确定要删除该课程吗？这会导致该课程的所有学生信息删除</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
       </Modal>
     </CourseWrapper>
   );
