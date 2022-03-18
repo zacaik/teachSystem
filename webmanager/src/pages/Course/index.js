@@ -174,6 +174,7 @@ const Course = memo(() => {
       <Modal
         title="删除课程"
         visible={isDeleteModalVisible}
+        onCancel={() => handleCancel(3)}
         footer={[
           <Button onClick={() => handleCancel(3)}>
             取消

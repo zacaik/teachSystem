@@ -3,7 +3,7 @@ import { BriefWrapper } from "./style";
 import { Select, Card, Button, Statistic, Table } from "antd";
 import { TeamOutlined } from "@ant-design/icons";
 import { http } from "../../utils/http";
-import { Pie, Column, Bar } from "@ant-design/plots";
+import { Pie, Column, Bar, G2 } from "@ant-design/plots";
 
 const Brief = memo(() => {
   const { Option } = Select;
@@ -21,15 +21,16 @@ const Brief = memo(() => {
   useEffect(() => {
     getData();
   }, []);
+  const G = G2.getEngine('canvas');
 
   const genderData = [
     {
-      type: "男生",
-      value: studentSummary?.male,
+      sex: '男',
+      sold: 0.45,
     },
     {
-      type: "女生",
-      value: studentSummary?.female,
+      sex: '女',
+      sold: 0.55,
     },
   ];
 
@@ -47,6 +48,50 @@ const Brief = memo(() => {
       value: studentSummary?.classThree,
     },
   ];
+
+  const genderConfig = {
+    appendPadding: 10,
+    data: genderData,
+    angleField: 'sold',
+    colorField: 'sex',
+    radius: 0.66,
+    color: ['#1890ff', '#f04864'],
+    label: {
+      content: (obj) => {
+        const group = new G.Group({});
+        group.addShape({
+          type: 'image',
+          attrs: {
+            x: 0,
+            y: 0,
+            width: 40,
+            height: 50,
+            img:
+              obj.sex === '男'
+                ? 'https://gw.alipayobjects.com/zos/rmsportal/oeCxrAewtedMBYOETCln.png'
+                : 'https://gw.alipayobjects.com/zos/rmsportal/mweUsJpBWucJRixSfWVP.png',
+          },
+        });
+        group.addShape({
+          type: 'text',
+          attrs: {
+            x: 20,
+            y: 54,
+            text: obj.sex,
+            textAlign: 'center',
+            textBaseline: 'top',
+            fill: obj.sex === '男' ? '#1890ff' : '#f04864',
+          },
+        });
+        return group;
+      },
+    },
+    interactions: [
+      {
+        type: 'element-active',
+      },
+    ],
+  };
 
   const config = {
     appendPadding: 0,
@@ -250,27 +295,27 @@ const Brief = memo(() => {
   const qaData = [
     {
       date: "3-1",
-      "参与度": 0.93,
+      参与度: 0.93,
     },
     {
       date: "3-7",
-      "参与度": 0.87,
+      参与度: 0.87,
     },
     {
       date: "3-14",
-      "参与度": 0.96,
+      参与度: 0.96,
     },
     {
       date: "3-21",
-      "参与度": 0.67,
+      参与度: 0.67,
     },
     {
       date: "3-28",
-      "参与度": 0.78,
+      参与度: 0.78,
     },
     {
       date: "4-4",
-      "参与度": 0.97,
+      参与度: 0.97,
     },
   ];
   const qaConfig = {
@@ -283,17 +328,15 @@ const Brief = memo(() => {
       },
     },
     scrollbar: {
-      type: 'vertical',
+      type: "vertical",
     },
   };
 
   return (
     <BriefWrapper>
       {classList.length && (
-        <Card bordered={false} style={{ width: "40%" }} className="classSelect">
-          <Button type="primary" style={{ marginRight: "20px" }}>
-            选择班级
-          </Button>
+        <div style={{ margin: 10 }}>
+          选择课程：
           <Select
             defaultValue={classList[0]}
             style={{ width: 300 }}
@@ -307,7 +350,7 @@ const Brief = memo(() => {
               );
             })}
           </Select>
-        </Card>
+        </div>
       )}
       <Card
         title="班级人数概况"
@@ -332,7 +375,7 @@ const Brief = memo(() => {
             />
           </div>
           <div className="pieWrapper">
-            <Pie {...config} data={genderData} />
+            <Pie {...genderConfig} />
           </div>
         </div>
         <div className="studentNumber">

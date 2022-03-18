@@ -38,7 +38,7 @@ const Student = memo(() => {
           <Button
             type="primary"
             className="btn"
-            onClick={() => navigate("./detail/1")}
+            onClick={() => navigate("./detail/1", { state: record })}
           >
             查看学生详情
           </Button>
