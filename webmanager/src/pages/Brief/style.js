@@ -64,4 +64,13 @@ export const BriefWrapper = styled.div`
       width: 300px;
     }
   }
+
+  .qaItem {
+    margin: 30px;
+    margin-left: 50px;
+  }
+
+  .trend {
+    display: flex;
+  }
 `;

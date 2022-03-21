@@ -1,7 +1,11 @@
 import React, { memo, useEffect, useState } from "react";
 import { BriefWrapper } from "./style";
-import { Select, Card, Button, Statistic, Table } from "antd";
-import { TeamOutlined } from "@ant-design/icons";
+import { Select, Card, Button, Statistic, Table, Progress } from "antd";
+import {
+  TeamOutlined,
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+} from "@ant-design/icons";
 import { http } from "../../utils/http";
 import { Pie, Column, Bar, G2 } from "@ant-design/plots";
 
@@ -21,15 +25,15 @@ const Brief = memo(() => {
   useEffect(() => {
     getData();
   }, []);
-  const G = G2.getEngine('canvas');
+  const G = G2.getEngine("canvas");
 
   const genderData = [
     {
-      sex: '男',
+      sex: "男",
       sold: 0.45,
     },
     {
-      sex: '女',
+      sex: "女",
       sold: 0.55,
     },
   ];
@@ -52,35 +56,35 @@ const Brief = memo(() => {
   const genderConfig = {
     appendPadding: 10,
     data: genderData,
-    angleField: 'sold',
-    colorField: 'sex',
+    angleField: "sold",
+    colorField: "sex",
     radius: 0.66,
-    color: ['#1890ff', '#f04864'],
+    color: ["#1890ff", "#f04864"],
     label: {
       content: (obj) => {
         const group = new G.Group({});
         group.addShape({
-          type: 'image',
+          type: "image",
           attrs: {
             x: 0,
             y: 0,
             width: 40,
             height: 50,
             img:
-              obj.sex === '男'
-                ? 'https://gw.alipayobjects.com/zos/rmsportal/oeCxrAewtedMBYOETCln.png'
-                : 'https://gw.alipayobjects.com/zos/rmsportal/mweUsJpBWucJRixSfWVP.png',
+              obj.sex === "男"
+                ? "https://gw.alipayobjects.com/zos/rmsportal/oeCxrAewtedMBYOETCln.png"
+                : "https://gw.alipayobjects.com/zos/rmsportal/mweUsJpBWucJRixSfWVP.png",
           },
         });
         group.addShape({
-          type: 'text',
+          type: "text",
           attrs: {
             x: 20,
             y: 54,
             text: obj.sex,
-            textAlign: 'center',
-            textBaseline: 'top',
-            fill: obj.sex === '男' ? '#1890ff' : '#f04864',
+            textAlign: "center",
+            textBaseline: "top",
+            fill: obj.sex === "男" ? "#1890ff" : "#f04864",
           },
         });
         return group;
@@ -88,7 +92,7 @@ const Brief = memo(() => {
     },
     interactions: [
       {
-        type: 'element-active',
+        type: "element-active",
       },
     ],
   };
@@ -292,46 +296,6 @@ const Brief = memo(() => {
     },
   ];
 
-  const qaData = [
-    {
-      date: "3-1",
-      参与度: 0.93,
-    },
-    {
-      date: "3-7",
-      参与度: 0.87,
-    },
-    {
-      date: "3-14",
-      参与度: 0.96,
-    },
-    {
-      date: "3-21",
-      参与度: 0.67,
-    },
-    {
-      date: "3-28",
-      参与度: 0.78,
-    },
-    {
-      date: "4-4",
-      参与度: 0.97,
-    },
-  ];
-  const qaConfig = {
-    data: qaData,
-    xField: "参与度",
-    yField: "date",
-    yAxis: {
-      label: {
-        autoRotate: false,
-      },
-    },
-    scrollbar: {
-      type: "vertical",
-    },
-  };
-
   return (
     <BriefWrapper>
       {classList.length && (
@@ -437,21 +401,9 @@ const Brief = memo(() => {
         title="成绩概况"
         style={{ width: "100%", marginTop: "20px" }}
       >
-        <div className="columnWrapper" style={{ width: "40%" }}>
+        <div className="columnWrapper" style={{ width: "60%" }}>
           <h3 className="test-title">知识测验成绩分段：</h3>
           <div className="selecter-wrapper">
-            <div className="selecter-item">
-              选择课程：
-              <Select defaultValue={classList[0]} style={{ width: 200 }}>
-                {classList.map((item) => {
-                  return (
-                    <Option value={item} key={item}>
-                      {item}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </div>
             <div className="selecter-item">
               选择测验：
               <Select defaultValue={classList[0]} style={{ width: 200 }}>
@@ -467,21 +419,33 @@ const Brief = memo(() => {
           </div>
           <Column {...testConfig} />
         </div>
-        <div className="qaBarWrapper" style={{ width: "40%" }}>
-          <h3 className="test-title">课堂参与度统计：</h3>
-          <div className="selecter-item">
-            选择课程：
-            <Select defaultValue={classList[0]} style={{ width: 200 }}>
-              {classList.map((item) => {
-                return (
-                  <Option value={item} key={item}>
-                    {item}
-                  </Option>
-                );
-              })}
-            </Select>
+        <div className="qaWrapper" style={{ width: "30%" }}>
+          <h3 className="qaTitle">课堂互动统计：</h3>
+          <Statistic title="总互动次数" value={14} className="qaItem" />
+          <Statistic
+            title="有效互动人次"
+            value={1321}
+            prefix={<TeamOutlined />}
+            className="qaItem"
+          />
+          <div className="trend qaItem">
+            <Statistic
+              title="有效互动占比"
+              value={75}
+              formatter={(value) => {
+                return <Progress type="circle" percent={value} />;
+              }}
+            />
+            <Statistic
+              title="周同比"
+              value={9.3}
+              precision={2}
+              valueStyle={{ color: "#3f8600" }}
+              prefix={<ArrowUpOutlined />}
+              suffix="%"
+              style={{ marginTop: 40, marginLeft: 20 }}
+            />
           </div>
-          <Bar {...qaConfig} />
         </div>
       </Card>
     </BriefWrapper>
