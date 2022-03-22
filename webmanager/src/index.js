@@ -6,6 +6,7 @@ import '@ant-design/pro-layout/dist/layout.less';
 import store from "./store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from 'react-router-dom';
+import "@icon-park/react/styles/index.css";
 
 ReactDOM.render(
   <Provider store={store}>
