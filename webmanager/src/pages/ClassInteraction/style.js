@@ -37,6 +37,9 @@ export const InterationWrapper = styled.div`
       width: 49%;
       min-height: 700px;
     }
+    .left > .ant-card-body {
+        padding: 0;
+    }
   }
 `;
 
