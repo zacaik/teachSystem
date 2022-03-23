@@ -1,8 +1,10 @@
 import React, { memo, useState } from "react";
 import { QuestionContentItemWrapper } from "./style";
 import { Comment, Play, PauseOne, Clear } from "@icon-park/react";
-import { Statistic, Tooltip, Progress } from "antd";
+import { Statistic, Tooltip, Progress, Modal } from "antd";
 import { StopOutlined } from "@ant-design/icons";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { showStartModal } from '../store/actionCreators';
 import moment from "moment";
 import { useEffect } from "react";
 
@@ -13,9 +15,9 @@ const QuestionContentItem = memo((props) => {
   const [countdownTime, setCountdownTime] = useState(time);
   const [percent, setPercent] = useState(100);
   const [isStart, setIsStart] = useState(false);
-  // console.log(countdownTime);
-
-  // console.log(moment.utc(1000).format("hh:mm:ss"));
+  const dispatch = useDispatch();
+  // const res = useSelector((state) => state.classInteract, shallowEqual);
+  // console.log(res);
 
   useEffect(() => {
       setCountdownTime(time);
@@ -78,7 +80,8 @@ const QuestionContentItem = memo((props) => {
   }
 
   function handleStart() {
-    setIsStart(true);
+    dispatch(showStartModal())
+    // setIsStart(true);
     // 向服务端发送请求，答题开始
   }
 

@@ -14,12 +14,16 @@ import {
 import { PlusOutlined } from "@ant-design/icons";
 import { Comment } from "@icon-park/react";
 import QuestionContentItem from "./QuestionContentItem";
+import {useSelector, shallowEqual, useDispatch} from 'react-redux';
+import { showStartModal, hideStartModal } from './store/actionCreators'
 
 const ClassInteraction = memo(() => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isNumberInputAvailable, setisNumberInputAailable] = useState(false);
   const [form] = Form.useForm();
   const [questionList, setQuestionList] = useState([]);
+  const res = useSelector((state) => state.classInteract, shallowEqual);
+  const dispatch = useDispatch();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -111,6 +115,11 @@ const ClassInteraction = memo(() => {
           </Form>
         </div>
       </Modal>
+      <Modal title="Basic Modal" visible={res.isStartModalShow} onOk={handleStartModalOk} onCancel={handleStartModalCancel}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
     </InterationWrapper>
   );
 
@@ -126,6 +135,14 @@ const ClassInteraction = memo(() => {
     console.log(values);
     setIsModalVisible(false);
     setQuestionList([...questionList, { type: "qa", ...values }]);
+  }
+
+  function handleStartModalOk() {
+    dispatch(hideStartModal());
+  }
+
+  function handleStartModalCancel() {
+    dispatch(hideStartModal());
   }
 });
 
