@@ -13,7 +13,7 @@ const LoginPage = (props) => {
     try {
       console.log(values);
       dispatch(loginAction(values));
-      navigate("breif");
+      navigate("brief");
     } catch (error) {
     }
   };

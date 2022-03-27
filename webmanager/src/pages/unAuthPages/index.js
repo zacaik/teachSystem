@@ -6,7 +6,7 @@ import RegisterPage from "./RegisterPage";
 import left from "../../assets/left.svg";
 import right from "../../assets/right.svg";
 
-const UnAutnPage = () => {
+const UnAuthPage = () => {
   const [isRegister, setIsRegister] = useState(false);
 
   return (
@@ -34,7 +34,7 @@ const UnAutnPage = () => {
   );
 };
 
-export default UnAutnPage;
+export default UnAuthPage;
 
 const Container = styled.div`
   display: flex;

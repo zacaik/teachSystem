@@ -1,5 +1,5 @@
 import styled from "styled-components";
-export const InterationWrapper = styled.div`
+export const InteractionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   .interactHeader {
@@ -35,7 +35,7 @@ export const InterationWrapper = styled.div`
     .left,
     .right {
       width: 49%;
-      min-height: 700px;
+      min-height: 80vh;
     }
     .left > .ant-card-body {
         padding: 0;
