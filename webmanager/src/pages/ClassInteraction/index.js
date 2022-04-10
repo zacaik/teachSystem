@@ -16,6 +16,7 @@ import {
 import { PlusOutlined, SmileOutlined } from "@ant-design/icons";
 import { Comment } from "@icon-park/react";
 import QuestionContentItem from "./QuestionContentItem";
+import QaAnswerItem from './QaAnswerItem';
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import {
   showStartModal,
@@ -28,7 +29,6 @@ import {
 
 const ClassInteraction = memo(() => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isNumberInputAvailable, setIsNumberInputAvailable] = useState(false);
   const [form] = Form.useForm();
   // const [questionList, setQuestionList] = useState([]);
   const { isStartModalShow, isStopModalShow, questionList, currentIndex } =
@@ -121,7 +121,9 @@ const ClassInteraction = memo(() => {
           </div>
         </Card>
         <Card style={{ width: "49%" }} className="right">
-          <div className="rightContent"></div>
+          <div className="rightContent">
+
+          </div>
         </Card>
       </div>
       <Modal
