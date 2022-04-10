@@ -65,16 +65,6 @@ export function setQuestionList(list) {
   };
 }
 
-export function setQuestionItemCountDownTime(index, remainTime) {
-  return {
-    type: actionTypes.SET_QUESTION_ITEM_COUNT_DOWN_TIME,
-    payload: {
-      index,
-      remainTime,
-    },
-  };
-}
-
 export function setCurrentIndex(index) {
   return {
     type: actionTypes.SET_CURRENT_INDEX,

@@ -59,10 +59,11 @@ const ClassInteraction = memo(() => {
       </Button>
     );
     notification.open({
-      description: "您发布的题目的回答时间已经结束了哟，快来看看答题结果吧",
+      description: "您发布的题目已经终止回答，快来看看答题结果吧",
       icon: <SmileOutlined style={{ color: "#108ee9" }} />,
       btn,
       key,
+      duration: 2,
     });
   };
 
@@ -153,16 +154,6 @@ const ClassInteraction = memo(() => {
             >
               <Input.TextArea />
             </Form.Item>
-            <Form.Item label="请输入答题时间" name="answerTime">
-              <InputNumber addonAfter="秒" disabled={!isNumberInputAvailable} />
-            </Form.Item>
-            <Form.Item
-              label="手动控制答题时长"
-              name="isAutoAnswerTime"
-              initialValue={true}
-            >
-              <Switch onChange={handleSwitchChange} defaultChecked={true} />
-            </Form.Item>
           </Form>
         </div>
       </Modal>
@@ -191,14 +182,6 @@ const ClassInteraction = memo(() => {
     </InteractionWrapper>
   );
 
-  function handleSwitchChange(selected) {
-    if (selected) {
-      setIsNumberInputAvailable(false);
-    } else {
-      setIsNumberInputAvailable(true);
-    }
-  }
-
   function onFinish(values) {
     console.log(values);
     setIsModalVisible(false);
@@ -208,7 +191,6 @@ const ClassInteraction = memo(() => {
           type: "qa",
           isStart: false,
           isFinished: false,
-          remainTime: values.answerTime * 1000,
           ...values,
         },
       ])

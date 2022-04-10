@@ -34,13 +34,6 @@ function reducer(state = defaultState, action) {
         ...state,
         questionList: [...state.questionList, ...action.payload.list],
       };
-    case actionTypes.SET_QUESTION_ITEM_COUNT_DOWN_TIME:
-    const { remainTime } = action.payload;
-      newQuestionList[action.payload.index].remainTime = remainTime;
-      return {
-        ...state,
-        questionList: newQuestionList,
-      };
     case actionTypes.SET_CURRENT_INDEX:
       return {
         ...state,

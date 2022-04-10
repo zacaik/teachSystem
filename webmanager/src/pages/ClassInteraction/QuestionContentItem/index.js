@@ -16,15 +16,14 @@ import { useEffect } from "react";
 
 const QuestionContentItem = memo((props) => {
   // console.log(props);
-  const { Countdown } = Statistic;
-  const { isAutoAnswerTime, questionContent } = props.content;
+  const { questionContent } = props.content;
   const { index } = props;
   const dispatch = useDispatch();
   const { questionList } = useSelector(
     (state) => state.classInteract,
     shallowEqual
   );
-  const { remainTime, isStart, isFinished } = questionList[index];
+  const { isStart, isFinished } = questionList[index];
 
   // useEffect(() => {
   //   setCountdownTime(time);
@@ -49,14 +48,6 @@ const QuestionContentItem = memo((props) => {
     if (isStart && !isFinished) {
       return (
         <div className="stop">
-          {!isAutoAnswerTime && (
-            <Countdown
-              value={Date.now() + remainTime}
-              onChange={handleCountDownChange}
-              style={{ marginRight: 10 }}
-              onFinish={handleCountDownFinished}
-            />
-          )}
           <Tooltip title="终止互动">
             <StopOutlined
               style={{ color: "#d0021b", fontSize: 24 }}
@@ -94,10 +85,6 @@ const QuestionContentItem = memo((props) => {
     </QuestionContentItemWrapper>
   );
 
-  function handleCountDownChange(number) {
-    dispatch(setQuestionItemCountDownTime(index, number));
-  }
-
   function handleStart() {
     dispatch(showStartModal());
     dispatch(setCurrentIndex(index));
@@ -105,10 +92,6 @@ const QuestionContentItem = memo((props) => {
 
   function handleStop() {
     dispatch(showStopModal());
-  }
-
-  function handleCountDownFinished() {
-    dispatch(setInteractIsFinished(index, true));
   }
 });
 
