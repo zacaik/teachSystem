@@ -1,4 +1,5 @@
 import * as actionTypes from "./constants";
+import { http } from "../../../utils/http";
 
 export function showStartModal() {
   return {
@@ -71,5 +72,17 @@ export function setCurrentIndex(index) {
     payload: {
       index,
     },
+  };
+}
+
+export function getInteractList(id) {
+  return async (dispatch, getState) => {
+    // console.log(getState());
+    // const user = getState().user;
+    // console.log(user.token);
+    const token = localStorage.getItem("__auth-provider-token__");
+    console.log(token);
+    const res = await http("/scweb/interaction", { data: { classId: 1 }, token });
+    console.log(res);
   };
 }

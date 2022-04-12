@@ -39,6 +39,11 @@ function reducer(state = defaultState, action) {
         ...state,
         currentIndex: action.payload.index,
       };
+      case actionTypes.SET_INTERACT_LIST:
+        return {
+          ...state,
+          currentIndex: action.payload.index,
+        };
     default:
       return state;
   }

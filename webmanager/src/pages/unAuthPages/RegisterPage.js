@@ -1,14 +1,11 @@
 import { Form, Input, Button, message } from "antd";
-// import { useAuth } from "context/AuthContext";
-// import { useAsync } from "utils/useAsync";
 import { LongButton } from "./LoginPage";
 import { useState } from "react";
 import { http } from "../../utils/http";
 
+
 const RegisterPage = (props) => {
   const { setIsRegister } = props;
-  // const { register } = useAuth();
-  // const { run, isLoading } = useAsync();
   const [form] = Form.useForm();
   const [isGetCodeButtonDisabled, setIsGetCodeButtonDisabled] = useState(true);
 
@@ -98,7 +95,7 @@ const RegisterPage = (props) => {
       >
         <Input type="phone" id={"phone"} />
       </Form.Item>
-      <Form.Item>
+      <Form.Item wrapperCol={{ span: 24 }}>
         <LongButton htmlType={"submit"} type={"primary"}>
           注册
         </LongButton>
@@ -142,7 +139,7 @@ const RegisterPage = (props) => {
       http("/scweb/login/registerCode", {
         data: { email: form.getFieldValue("email") },
       }).then(() => {
-        message.success('验证码已发送');
+        message.success('验证码已发送，请注意查收');
       }, () => {
         message.error("网络错误，请稍后重试！");
       });

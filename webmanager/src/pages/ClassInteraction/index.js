@@ -25,6 +25,7 @@ import {
   hideStopModal,
   setInteractIsFinished,
   setQuestionList,
+  getInteractList
 } from "./store/actionCreators";
 
 const ClassInteraction = memo(() => {
@@ -47,6 +48,10 @@ const ClassInteraction = memo(() => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  useEffect(() => {
+    dispatch(getInteractList())
+  }, []);
 
   const openNotification = () => {
     const btn = (

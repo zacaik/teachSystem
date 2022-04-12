@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { Button, Input, Form } from "antd";
+import { Button, Input, Form, Checkbox } from "antd";
 import { useDispatch } from "react-redux";
-import { loginAction } from './store/actionCreators'
-import { useNavigate } from 'react-router-dom'
-
+import { loginAction } from "./store/actionCreators";
+import { useNavigate } from "react-router-dom";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const LoginPage = (props) => {
   const dispatch = useDispatch();
@@ -14,26 +14,35 @@ const LoginPage = (props) => {
       console.log(values);
       dispatch(loginAction(values));
       navigate("brief");
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
-    <Form onFinish={handleSubmit}>
+    <Form onFinish={handleSubmit} >
       <Form.Item
-        name={"username"}
-        rules={[{ required: true, message: "请输入用户名" }]}
+        name="phone"
+        rules={[{ required: true, message: "请输入注册时填写的手机号!" }]}
       >
-        <Input placeholder={"用户名"} type="text" id={"username"} />
+        <Input
+          prefix={<UserOutlined className="site-form-item-icon" />}
+          placeholder="手机号码"
+        />
       </Form.Item>
       <Form.Item
-        name={"password"}
+        name="password"
         rules={[{ required: true, message: "请输入密码" }]}
+        style={{ margin: 0 }}
       >
-        <Input placeholder={"密码"} type="password" id={"password"} />
+        <Input.Password
+          prefix={<LockOutlined className="site-form-item-icon" />}
+          placeholder="Password"
+        />
+      </Form.Item>
+      <Form.Item name="remember" valuePropName="checked" wrapperCol={{ span: 8, offset: 19 }} style={{ margin: "5px 0px" }}>
+        <Checkbox>记住我</Checkbox>
       </Form.Item>
       <Form.Item>
-        <LongButton htmlType={"submit"} type={"primary"} >
+        <LongButton htmlType={"submit"} type={"primary"}>
           登录
         </LongButton>
       </Form.Item>
@@ -44,5 +53,5 @@ const LoginPage = (props) => {
 export default LoginPage;
 
 export const LongButton = styled(Button)`
-  width: 100%;
+  width: 90%;
 `;
