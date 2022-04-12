@@ -1,4 +1,1 @@
-export const baseUrl =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3001"
-    : "http://online.com";
+export const baseUrl = "http://124.221.127.152:6680";

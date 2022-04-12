@@ -16,7 +16,7 @@ const UnAuthPage = () => {
       <ShadowCard>
         <Title>{isRegister ? "注 册" : "登 录"}</Title>
         {isRegister ? (
-          <RegisterPage />
+          <RegisterPage setIsRegister={setIsRegister}/>
         ) : (
           <LoginPage />
         )}
