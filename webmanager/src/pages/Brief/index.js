@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState } from "react";
 import { BriefWrapper } from "./style";
 import { Select, Card, Button, Statistic, Table, Progress } from "antd";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import {
   TeamOutlined,
   ArrowDownOutlined,
@@ -15,8 +16,16 @@ const Brief = memo(() => {
   const [classList, setClassList] = useState([]);
   const [studentSummary, setStudentSummary] = useState({});
 
+  let { user } = useSelector(
+    (state) => ({
+      user: state.user.user,
+    }),
+    shallowEqual
+  );
+
   const getData = async () => {
     const classlist = await http("classList", {});
+    // const classlist = await http(`/scweb/class/list/${user.jobId}`, {});
     const studentSummary = await http("getStudentSummary", {});
     setStudentSummary(studentSummary);
     setClassList(classlist);
@@ -298,24 +307,23 @@ const Brief = memo(() => {
 
   return (
     <BriefWrapper>
-      {classList.length && (
-        <div style={{ margin: 10 }}>
-          选择课程：
-          <Select
-            defaultValue={classList[0]}
-            style={{ width: 300 }}
-            onChange={handleChange}
-          >
-            {classList.map((item) => {
-              return (
-                <Option value={item} key={item}>
-                  {item}
-                </Option>
-              );
-            })}
-          </Select>
-        </div>
-      )}
+      <div style={{ margin: 10 }}>
+        选择课程：
+        <Select
+          defaultValue={classList[0] || ""}
+          style={{ width: 300 }}
+          onChange={handleChange}
+        >
+          {classList.map((item) => {
+            return (
+              <Option value={item} key={item}>
+                {item}
+              </Option>
+            );
+          })}
+        </Select>
+      </div>
+
       <Card
         title="班级人数概况"
         style={{ width: "100%" }}

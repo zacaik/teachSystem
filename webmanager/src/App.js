@@ -1,5 +1,5 @@
 import { Loading } from "./components";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,9 @@ const UnAuthPage = React.lazy(() => import("./pages/unAuthPages"));
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [currentClass, setCurrentClass] = useState("");
+  const [classList, setClassList] = useState([]);
+  console.log(classList);
   let { user } = useSelector(
     (state) => ({
       user: state.user.user,
@@ -38,18 +41,29 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!user) {
       navigate("/");
     } else {
       navigate("/brief");
+      const classList = await http("classList", {});
+      console.log(classList);
+      setClassList(classList);
     }
   }, [user]);
 
   return (
     <div className="App">
       <React.Suspense fallback={<Loading />}>
-        {user ? <AuthPage /> : <UnAuthPage />}
+        {user ? (
+          <AuthPage
+            currentClass={currentClass}
+            setCurrentClass={setCurrentClass}
+            classList={classList}
+          />
+        ) : (
+          <UnAuthPage />
+        )}
       </React.Suspense>
     </div>
   );

@@ -17,8 +17,9 @@ import StudentDetail from "../Student/details";
 const { Header, Content, Footer, Sider } = Layout;
 // const { SubMenu } = Menu;
 
-export default memo(function AuthPage(props) {
+export default function AuthPage(props) {
   const [collapsed, setCollapsed] = useState(false);
+  const { currentClass, setCurrentClass, classList } = props;
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
@@ -61,13 +62,17 @@ export default memo(function AuthPage(props) {
         </Sider>
         <Layout className="site-layout">
           <Header className="site-layout-background" style={{ padding: 0 }}>
-            <MyHeader></MyHeader>
+            <MyHeader
+              currentClass={currentClass}
+              setCurrentClass={setCurrentClass}
+              classList={classList}
+            ></MyHeader>
           </Header>
           <Content style={{ margin: "0 16px" }}>
             <Routes>
               <Route path="/brief" element={<Brief />} />
               <Route path="/course" element={<Course />} />
-              <Route path="/student" element={<Student />} exact/>
+              <Route path="/student" element={<Student />} exact />
               <Route path="/student/detail/:id" element={<StudentDetail />} />
               <Route path="/classInteraction" element={<ClassInteraction />} />
             </Routes>
@@ -79,4 +84,4 @@ export default memo(function AuthPage(props) {
       </Layout>
     </ManageWrapper>
   );
-});
+}

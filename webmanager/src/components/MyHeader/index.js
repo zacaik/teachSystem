@@ -1,10 +1,29 @@
 import React, { memo } from "react";
 import { HeaderWrapper } from "./style";
-import { Avatar } from "antd";
+import { Avatar, Select } from "antd";
 
-export default memo(function MyHeader() {
+export default function MyHeader(props) {
+  const { currentClass, setCurrentClass, classList } = props;
+  const { Option } = Select;
+  console.log(classList);
   return (
     <HeaderWrapper>
+      <div className="left">
+        当前课程：
+        <Select
+          defaultValue={(classList || [])[0]}
+          style={{ width: 300 }}
+          onChange={handleChange}
+        >
+          {(classList || []).map((item) => {
+            return (
+              <Option value={item} key={item}>
+                {item}
+              </Option>
+            );
+          })}
+        </Select>
+      </div>
       <div className="right">
         <div className="user">
           <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }} className="avatar">凡</Avatar>
@@ -13,4 +32,9 @@ export default memo(function MyHeader() {
       </div>
     </HeaderWrapper>
   );
-});
+
+  function handleChange(value, option) {
+    console.log(value);
+    console.log(option);
+  }
+};

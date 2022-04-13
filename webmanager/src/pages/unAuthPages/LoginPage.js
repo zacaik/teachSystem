@@ -12,6 +12,8 @@ const LoginPage = (props) => {
   const handleSubmit = async (values) => {
     try {
       console.log(values);
+      values.rememberMe ? values.rememberMe = 1 : values.rememberMe = 0;
+      console.log(values);
       dispatch(loginAction(values));
       navigate("brief");
     } catch (error) {}
@@ -38,7 +40,7 @@ const LoginPage = (props) => {
           placeholder="Password"
         />
       </Form.Item>
-      <Form.Item name="remember" valuePropName="checked" wrapperCol={{ span: 8, offset: 19 }} style={{ margin: "5px 0px" }}>
+      <Form.Item name="rememberMe" valuePropName="checked" wrapperCol={{ span: 8, offset: 19 }} style={{ margin: "5px 0px" }}>
         <Checkbox>记住我</Checkbox>
       </Form.Item>
       <Form.Item>

@@ -1,6 +1,7 @@
 import * as actionTypes from "./constants";
 import { useNavigate } from 'react-router-dom'
 import { login } from "../../../service/user";
+import { message } from 'antd';
 
 export function setUserAction(res) {
   return {
@@ -16,6 +17,8 @@ export const loginAction = (values) => {
       console.log(res);
       localStorage.setItem("__auth-provider-token__", res.token);
       dispatch(setUserAction(res));
+    }).catch((err) => {
+      message.error(err);
     });
   };
 };
