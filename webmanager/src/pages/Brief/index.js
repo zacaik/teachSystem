@@ -10,11 +10,10 @@ import {
 import { http } from "../../utils/http";
 import { Pie, Column, Bar, G2 } from "@ant-design/plots";
 
-const Brief = memo(() => {
-  const { Option } = Select;
-
-  const [classList, setClassList] = useState([]);
+const Brief = memo((props) => {
   const [studentSummary, setStudentSummary] = useState({});
+  const { currentClass } = props;
+  const { Option } = Select;
 
   let { user } = useSelector(
     (state) => ({
@@ -24,11 +23,8 @@ const Brief = memo(() => {
   );
 
   const getData = async () => {
-    const classlist = await http("classList", {});
-    // const classlist = await http(`/scweb/class/list/${user.jobId}`, {});
     const studentSummary = await http("getStudentSummary", {});
     setStudentSummary(studentSummary);
-    setClassList(classlist);
   };
 
   useEffect(() => {
@@ -307,23 +303,6 @@ const Brief = memo(() => {
 
   return (
     <BriefWrapper>
-      <div style={{ margin: 10 }}>
-        选择课程：
-        <Select
-          defaultValue={classList[0] || ""}
-          style={{ width: 300 }}
-          onChange={handleChange}
-        >
-          {classList.map((item) => {
-            return (
-              <Option value={item} key={item}>
-                {item}
-              </Option>
-            );
-          })}
-        </Select>
-      </div>
-
       <Card
         title="班级人数概况"
         style={{ width: "100%" }}
@@ -414,14 +393,14 @@ const Brief = memo(() => {
           <div className="selecter-wrapper">
             <div className="selecter-item">
               选择测验：
-              <Select defaultValue={classList[0]} style={{ width: 200 }}>
-                {classList.map((item) => {
+              <Select style={{ width: 200 }}>
+                {/* {classList.map((item) => {
                   return (
                     <Option value={item} key={item}>
                       {item}
                     </Option>
                   );
-                })}
+                })} */}
               </Select>
             </div>
           </div>

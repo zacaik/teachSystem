@@ -16,7 +16,7 @@ import {
 import { PlusOutlined, SmileOutlined } from "@ant-design/icons";
 import { Comment } from "@icon-park/react";
 import QuestionContentItem from "./QuestionContentItem";
-import QaAnswerItem from './QaAnswerItem';
+import ReplyItem from "./replyItem";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import {
   showStartModal,
@@ -25,13 +25,15 @@ import {
   hideStopModal,
   setInteractIsFinished,
   setQuestionList,
-  getInteractList
 } from "./store/actionCreators";
+import { useHttp } from "../../utils/http";
+import moment from "moment";
 
-const ClassInteraction = memo(() => {
+const ClassInteraction = memo((props) => {
+  const request = useHttp();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { currentClass } = props;
   const [form] = Form.useForm();
-  // const [questionList, setQuestionList] = useState([]);
   const { isStartModalShow, isStopModalShow, questionList, currentIndex } =
     useSelector((state) => state.classInteract, shallowEqual);
   const dispatch = useDispatch();
@@ -49,8 +51,19 @@ const ClassInteraction = memo(() => {
     setIsModalVisible(false);
   };
 
+  const fetchInteractList = async () => {
+    console.log(1)
+    const interactList = await request(
+      // "/scweb/interaction",
+      "interaction",
+      { data: { classId: 1 } },
+    );
+    console.log(interactList)
+    dispatch(setQuestionList(interactList.data));
+  }
+
   useEffect(() => {
-    dispatch(getInteractList())
+    fetchInteractList();
   }, []);
 
   const openNotification = () => {
@@ -118,17 +131,14 @@ const ClassInteraction = memo(() => {
           <div className="leftContent">
             {questionList.map((item, index) => (
               <QuestionContentItem
-                content={item}
-                key={index}
-                index={index}
+                data={item}
+                key={item.id}
               ></QuestionContentItem>
             ))}
           </div>
         </Card>
         <Card style={{ width: "49%" }} className="right">
-          <div className="rightContent">
-
-          </div>
+          <div className="rightContent"></div>
         </Card>
       </div>
       <Modal
@@ -191,17 +201,31 @@ const ClassInteraction = memo(() => {
 
   function onFinish(values) {
     console.log(values);
-    setIsModalVisible(false);
-    dispatch(
-      setQuestionList([
-        {
-          type: "qa",
-          isStart: false,
-          isFinished: false,
-          ...values,
+    request([
+      "/scweb/interaction",
+      {
+        data: {
+          classId: currentClass,
+          title: values.questionContent,
+          createTime: moment().format("YYYY-MM-DD"),
         },
-      ])
-    );
+        method: "POST",
+      },
+    ]).then(() => {
+      message.success("操作成功");
+      setIsModalVisible(false);
+      fetchInteractList();
+    });
+    // dispatch(
+    //   setQuestionList([
+    //     {
+    //       type: "qa",
+    //       isStart: false,
+    //       isFinished: false,
+    //       ...values,
+    //     },
+    //   ])
+    // );
   }
 
   function handleStartModalOk() {

@@ -17,8 +17,8 @@ export default function MyHeader(props) {
         >
           {(classList || []).map((item) => {
             return (
-              <Option value={item} key={item}>
-                {item}
+              <Option value={item.id} key={item.id}>
+                {item.name}
               </Option>
             );
           })}
@@ -36,5 +36,6 @@ export default function MyHeader(props) {
   function handleChange(value, option) {
     console.log(value);
     console.log(option);
+    setCurrentClass(value);
   }
 };

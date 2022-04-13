@@ -35,7 +35,8 @@ export const InteractionWrapper = styled.div`
     .left,
     .right {
       width: 49%;
-      min-height: 80vh;
+      max-height: 80vh;
+      overflow-y: scroll;
     }
     .left > .ant-card-body {
         padding: 0;

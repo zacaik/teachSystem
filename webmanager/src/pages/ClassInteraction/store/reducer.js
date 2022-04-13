@@ -4,7 +4,7 @@ const defaultState = {
   isStartModalShow: false,
   isStopModalShow: false,
   questionList: [],
-  currentIndex: 0, // 当前控制的问题的下标
+  currentQuestionItemId: 0, // 当前选中的问题的id
 };
 
 function reducer(state = defaultState, action) {
@@ -34,16 +34,11 @@ function reducer(state = defaultState, action) {
         ...state,
         questionList: [...state.questionList, ...action.payload.list],
       };
-    case actionTypes.SET_CURRENT_INDEX:
+    case actionTypes.SET_CURRENT_QUESTION_ITEM_ID:
       return {
         ...state,
-        currentIndex: action.payload.index,
+        currentQuestionItemId: action.payload.id,
       };
-      case actionTypes.SET_INTERACT_LIST:
-        return {
-          ...state,
-          currentIndex: action.payload.index,
-        };
     default:
       return state;
   }

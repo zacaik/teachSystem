@@ -3,10 +3,7 @@ import { baseUrl } from "../consts";
 import { useCallback } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 
-export const http = async (
-  url,
-  { data, token, headers, ...customConfig }
-) => {
+export const http = async (url, { data, token, headers, ...customConfig }) => {
   const config = {
     method: "GET",
     headers: {
@@ -16,7 +13,7 @@ export const http = async (
     ...customConfig,
   };
 
-  if (config.method.toUpperCase() === "GET" ) {
+  if (config.method.toUpperCase() === "GET") {
     if (data) {
       url = `${url}?${qs.stringify(data)}`;
     }
@@ -39,14 +36,16 @@ export const http = async (
 };
 
 export const useHttp = () => {
-  const { user } = useSelector((state) => ({
-    user: state.user
-  }),
-  shallowEqual
-);
+  const { user } = useSelector(
+    (state) => ({
+      user: state.user,
+    }),
+    shallowEqual
+  );
   return useCallback(
-    (...[url, config]) =>
-    http(url, { ...config, token: user.token }),
-    [user.token],
-  )
+    (url, config) => {
+      return http(url, { ...config, token: user.token });
+    },
+    [user.token]
+  );
 };

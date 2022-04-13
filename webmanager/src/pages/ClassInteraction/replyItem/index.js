@@ -3,7 +3,7 @@ import { AnswerItemWrapper } from "./style";
 import { Comment, Tooltip, Avatar } from "antd";
 import moment from "moment";
 
-const QaAnswerItem = memo(() => {
+const ReplyItem = memo(() => {
   return (
     <AnswerItemWrapper>
       <Comment
@@ -28,4 +28,4 @@ const QaAnswerItem = memo(() => {
   );
 });
 
-export default QaAnswerItem;
+export default ReplyItem;

@@ -75,5 +75,75 @@
     "classOne": 40,
     "classTow": 20,
     "classThree": 60
+  },
+  "interaction": {
+    "code": 1,
+    "msg": "查询成功",
+    "data": [
+      {
+        "id": 12,
+        "classId": 1,
+        "title": "什么是Java？",
+        "content": "大家都知道...",
+        "createTime": "2022-04-10T09:12:30.000+00:00",
+        "lastTime": 15
+      },
+      {
+        "id": 13,
+        "classId": 1,
+        "title": "什么是GO？",
+        "content": "从来没学过...",
+        "createTime": "2022-04-10T09:12:30.000+00:00",
+        "lastTime": 15
+      },
+      {
+        "id": 14,
+        "classId": 1,
+        "title": "什么是JSP？",
+        "content": "没人知道...",
+        "createTime": "2022-04-10T09:12:30.000+00:00",
+        "lastTime": 15
+      },
+      {
+        "id": 15,
+        "classId": 1,
+        "title": "怎么说大司马？",
+        "content": "他很有趣...",
+        "createTime": "2022-04-10T09:12:30.000+00:00",
+        "lastTime": 15
+      },
+      {
+        "id": 16,
+        "classId": 1,
+        "title": "什么是Java？",
+        "content": "大家都知道...",
+        "createTime": "2022-04-10T12:36:41.000+00:00",
+        "lastTime": 15
+      },
+      {
+        "id": 17,
+        "classId": 1,
+        "title": "什么是GO？",
+        "content": "从来没学过...",
+        "createTime": "2022-04-10T12:36:41.000+00:00",
+        "lastTime": 15
+      },
+      {
+        "id": 18,
+        "classId": 1,
+        "title": "什么是JSP？",
+        "content": "没人知道...",
+        "createTime": "2022-04-10T12:36:41.000+00:00",
+        "lastTime": 15
+      },
+      {
+        "id": 19,
+        "classId": 1,
+        "title": "怎么说大司马？",
+        "content": "他很有趣...",
+        "createTime": "2022-04-10T12:36:41.000+00:00",
+        "lastTime": 15
+      }
+    ]
   }
 }

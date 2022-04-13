@@ -66,23 +66,12 @@ export function setQuestionList(list) {
   };
 }
 
-export function setCurrentIndex(index) {
+export function setCurrentQuestionItemId(id) {
   return {
-    type: actionTypes.SET_CURRENT_INDEX,
+    type: actionTypes.SET_CURRENT_QUESTION_ITEM_ID,
     payload: {
-      index,
+      id,
     },
   };
 }
 
-export function getInteractList(id) {
-  return async (dispatch, getState) => {
-    // console.log(getState());
-    // const user = getState().user;
-    // console.log(user.token);
-    const token = localStorage.getItem("__auth-provider-token__");
-    console.log(token);
-    const res = await http("/scweb/interaction", { data: { classId: 1 }, token });
-    console.log(res);
-  };
-}

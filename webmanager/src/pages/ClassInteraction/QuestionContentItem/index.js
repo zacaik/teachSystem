@@ -10,24 +10,15 @@ import {
   setInteractIsFinished,
   setQuestionItemCountDownTime,
   setCurrentIndex,
+  setCurrentQuestionItemId,
 } from "../store/actionCreators";
 import moment from "moment";
 import { useEffect } from "react";
 
 const QuestionContentItem = memo((props) => {
-  // console.log(props);
-  const { questionContent } = props.content;
-  const { index } = props;
+  // console.log(props);;
+  const { id, title, isStart, isFinished, createTime } = props.data;
   const dispatch = useDispatch();
-  const { questionList } = useSelector(
-    (state) => state.classInteract,
-    shallowEqual
-  );
-  const { isStart, isFinished } = questionList[index];
-
-  // useEffect(() => {
-  //   setCountdownTime(time);
-  // }, [isStart]);
 
   const renderAction = () => {
     if (!isStart) {
@@ -68,7 +59,7 @@ const QuestionContentItem = memo((props) => {
   };
 
   return (
-    <QuestionContentItemWrapper>
+    <QuestionContentItemWrapper onClick={handleQuestionItemClick}>
       <div className="question-header">
         <div className="title">
           <Comment
@@ -78,20 +69,30 @@ const QuestionContentItem = memo((props) => {
             style={{ marginRight: 6 }}
           />
           <p>问答题</p>
+          <div
+            className="time"
+            style={{ fontSize: "12", color: "#ccc", marginLeft: 20 }}
+          >
+            创建于：{createTime}
+          </div>
         </div>
         <div className="action">{renderAction()}</div>
       </div>
-      <div className="question-content">{questionContent}</div>
+      <div className="question-content">{title}</div>
     </QuestionContentItemWrapper>
   );
 
   function handleStart() {
     dispatch(showStartModal());
-    dispatch(setCurrentIndex(index));
+    dispatch(setCurrentQuestionItemId(id));
   }
 
   function handleStop() {
     dispatch(showStopModal());
+  }
+
+  function handleQuestionItemClick() {
+    dispatch(setCurrentQuestionItemId(id));
   }
 });
 

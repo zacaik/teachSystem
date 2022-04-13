@@ -46,9 +46,9 @@ function App() {
       navigate("/");
     } else {
       navigate("/brief");
-      const classList = await http("classList", {});
+      const classList = await http(`/scweb/class/list/${user.jobId}`, {});
       console.log(classList);
-      setClassList(classList);
+      setClassList(classList.data);
     }
   }, [user]);
 

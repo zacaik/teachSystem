@@ -70,11 +70,11 @@ export default function AuthPage(props) {
           </Header>
           <Content style={{ margin: "0 16px" }}>
             <Routes>
-              <Route path="/brief" element={<Brief />} />
+              <Route path="/brief" element={<Brief currentClass={currentClass} />} />
               <Route path="/course" element={<Course />} />
               <Route path="/student" element={<Student />} exact />
               <Route path="/student/detail/:id" element={<StudentDetail />} />
-              <Route path="/classInteraction" element={<ClassInteraction />} />
+              <Route path="/classInteraction" element={<ClassInteraction currentClass={currentClass} />} />
             </Routes>
           </Content>
           <Footer style={{ textAlign: "center" }}>
