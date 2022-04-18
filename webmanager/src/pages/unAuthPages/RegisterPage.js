@@ -3,7 +3,6 @@ import { LongButton } from "./LoginPage";
 import { useState } from "react";
 import { http } from "../../utils/http";
 
-
 const RegisterPage = (props) => {
   const { setIsRegister } = props;
   const [form] = Form.useForm();
@@ -57,7 +56,10 @@ const RegisterPage = (props) => {
         ]}
       >
         <Input.Group compact>
-          <Input style={{ width: "calc(100% - 102px)" }} onChange={handleCodeInputChange}/>
+          <Input
+            style={{ width: "calc(100% - 102px)" }}
+            onChange={handleCodeInputChange}
+          />
           <Button
             type="primary"
             onClick={handleGetCode}
@@ -69,10 +71,10 @@ const RegisterPage = (props) => {
       </Form.Item>
       <Form.Item
         label="姓名"
-        name="username"
+        name="name"
         rules={[{ required: true, message: "请输入姓名" }]}
       >
-        <Input type="text" id={"username"} />
+        <Input type="text" id={"name"} />
       </Form.Item>
       <Form.Item
         label="工号"
@@ -105,21 +107,31 @@ const RegisterPage = (props) => {
 
   async function handleSubmit(values) {
     console.log(values);
-    http(`/scweb/login/register?code=${values.code}&email=${values.email}`, {
-      data: { ...values },
+    http(`scweb/login/register`, {
+      data: {
+        teacher: {
+          ...values,
+          job: "0",
+        },
+        email: values.email,
+        code: values.code,
+      },
       method: "POST",
-    }).then(() => {
-      message.success('注册成功！');
-      setIsRegister(false);
-    }, () => {
-      message.error("网络错误，请稍后重试！");
-    });
+    }).then(
+      () => {
+        message.success("注册成功！");
+        setIsRegister(false);
+      },
+      () => {
+        message.error("网络错误，请稍后重试！");
+      }
+    );
   }
 
   function handleCodeInputChange(e) {
     const fieldsValue = form.getFieldsValue(true);
     console.log(fieldsValue);
-    form.setFieldsValue({...fieldsValue, code: e.target.value});
+    form.setFieldsValue({ ...fieldsValue, code: e.target.value });
   }
 
   function handleEamilInputChange(e) {
@@ -136,13 +148,16 @@ const RegisterPage = (props) => {
     if (form.getFieldError("email").length) {
       message.error("请输入正确格式的邮箱");
     } else {
-      http("/scweb/login/registerCode", {
+      http("scweb/login/registerCode", {
         data: { email: form.getFieldValue("email") },
-      }).then(() => {
-        message.success('验证码已发送，请注意查收');
-      }, () => {
-        message.error("网络错误，请稍后重试！");
-      });
+      }).then(
+        () => {
+          message.success("验证码已发送，请注意查收");
+        },
+        () => {
+          message.error("网络错误，请稍后重试！");
+        }
+      );
     }
   }
 };
