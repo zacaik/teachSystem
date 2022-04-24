@@ -223,17 +223,16 @@ const ClassInteraction = memo((props) => {
 
   function onFinish(values) {
     console.log(values);
-    request([
-      "/scweb/interaction",
-      {
-        data: {
-          classId: currentClass,
-          title: values.questionContent,
-          createTime: moment().format("YYYY-MM-DD"),
-        },
-        method: "POST",
+    request("scweb/interaction", {
+      data: {
+        classId: currentClass || "1",
+        title: values.questionContent,
+        createTime: moment().format("YYYY-MM-DD"),
+        type: "0",
+        content: "",
       },
-    ]).then(() => {
+      method: "POST",
+    }).then(() => {
       message.success("操作成功");
       setIsModalVisible(false);
       fetchInteractList();
@@ -252,9 +251,22 @@ const ClassInteraction = memo((props) => {
 
   function handleStartModalOk() {
     // 发送网络请求，开始答题
-    dispatch(hideStartModal());
-    dispatch(setInteractIsStart(currentQuestionItemId, true));
-    message.success("题目发布成功！");
+    request(`scweb/interaction/operation/${currentQuestionItemId}`, {
+      method: "PUT",
+      data: {
+        operation: 0,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        message.success("题目发布成功！");
+        dispatch(hideStartModal());
+        fetchInteractList();
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error(err);
+      });
   }
 
   function handleStartModalCancel() {
@@ -263,9 +275,22 @@ const ClassInteraction = memo((props) => {
 
   function handleStopModalOk() {
     // 发送网络请求，终止答题
-    dispatch(hideStopModal());
-    dispatch(setInteractIsFinished(currentQuestionItemId, true));
-    openNotification();
+    request(`scweb/interaction/operation/${currentQuestionItemId}`, {
+      method: "PUT",
+      data: {
+        operation: 2,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        message.success("互动已结束！");
+        dispatch(hideStopModal());
+        fetchInteractList();
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error(err);
+      });
   }
 
   function handleStopModalCancel() {
@@ -278,7 +303,7 @@ const ClassInteraction = memo((props) => {
     })
       .then((res) => {
         console.log(res);
-        message.success("删除成功");
+        openNotification();
         dispatch(hideDeleteModal());
         fetchInteractList();
       })

@@ -14,7 +14,7 @@ export const http = async (url, { data, token, headers, ...customConfig }) => {
     ...customConfig,
   };
 
-  if (config.method.toUpperCase() === "GET") {
+  if (config.method.toUpperCase() === "GET" || config.method.toUpperCase() === "PUT") {
     if (data) {
       url = `${url}?${qs.stringify(data)}`;
     }

@@ -55,26 +55,6 @@ export function hideDeleteModal() {
   };
 }
 
-export function setInteractIsStart(index, isStart) {
-  return {
-    type: actionTypes.SET_INTERACT_IS_START,
-    payload: {
-      index,
-      isStart,
-    },
-  };
-}
-
-export function setInteractIsFinished(index, isFinished) {
-  return {
-    type: actionTypes.SET_INTERACT_IS_FINISHED,
-    payload: {
-      index,
-      isFinished,
-    },
-  };
-}
-
 export function setQuestionList(list) {
   return {
     type: actionTypes.SET_QUESTION_LIST,
