@@ -2,27 +2,29 @@ import React, { memo, useState } from "react";
 import { QuestionContentItemWrapper } from "./style";
 import { Comment, Play, PauseOne, Clear } from "@icon-park/react";
 import { Statistic, Tooltip, Button, Modal } from "antd";
-import { StopOutlined } from "@ant-design/icons";
+import { StopOutlined, DeleteTwoTone } from "@ant-design/icons";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
   showStartModal,
   showStopModal,
+  showDeleteModal,
   setInteractIsFinished,
   setQuestionItemCountDownTime,
   setCurrentIndex,
   setCurrentQuestionItemId,
 } from "../store/actionCreators";
-import moment from "moment";
 import { useEffect } from "react";
 
 const QuestionContentItem = memo((props) => {
-  // console.log(props);;
-  const { id, title, isStart, isFinished, createTime } = props.data;
+  console.log(props);
+  const { id, title, start, finish, createTime } = props.data;
   const dispatch = useDispatch();
+  const [actionList, setActionList] = useState([]);
 
-  const renderAction = () => {
-    if (!isStart) {
-      return (
+  useEffect(() => {
+    const newActionList = [];
+    if (start === 0 && finish === 0) {
+      newActionList.push(
         <div className="start">
           <Tooltip title="发布题目">
             <Play
@@ -36,8 +38,8 @@ const QuestionContentItem = memo((props) => {
       );
     }
 
-    if (isStart && !isFinished) {
-      return (
+    if (start === 1 && finish !== 1) {
+      newActionList.push(
         <div className="stop">
           <Tooltip title="终止互动">
             <StopOutlined
@@ -49,14 +51,31 @@ const QuestionContentItem = memo((props) => {
       );
     }
 
-    if (isFinished) {
-      return (
+    if (finish === 1) {
+      newActionList.push(
         <div className="restart">
           <Button type="primary">重新发布</Button>
         </div>
       );
     }
-  };
+
+    newActionList.push(
+      <div className="deleteWrapper" onClick={handleDeleteQuestionItem}>
+        <Tooltip title="删除">
+          <DeleteTwoTone
+            style={{
+              color: "#d0021b",
+              fontSize: 24,
+              marginLeft: 8,
+              marginTop: 4,
+            }}
+          />
+        </Tooltip>
+      </div>
+    );
+
+    setActionList(newActionList);
+  }, [start, finish]);
 
   return (
     <QuestionContentItemWrapper onClick={handleQuestionItemClick}>
@@ -76,7 +95,11 @@ const QuestionContentItem = memo((props) => {
             创建于：{createTime}
           </div>
         </div>
-        <div className="action">{renderAction()}</div>
+        <div className="action">
+          {actionList.map((item) => {
+            return item;
+          })}
+        </div>
       </div>
       <div className="question-content">{title}</div>
     </QuestionContentItemWrapper>
@@ -93,6 +116,11 @@ const QuestionContentItem = memo((props) => {
 
   function handleQuestionItemClick() {
     dispatch(setCurrentQuestionItemId(id));
+  }
+
+  function handleDeleteQuestionItem() {
+    handleQuestionItemClick();
+    dispatch(showDeleteModal());
   }
 });
 

@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 
 export const http = async (url, { data, token, headers, ...customConfig }) => {
+  console.log(token);
   const config = {
     method: "GET",
     headers: {
@@ -22,6 +23,7 @@ export const http = async (url, { data, token, headers, ...customConfig }) => {
   }
 
   return window.fetch(`${baseUrl}/${url}`, config).then(async (res) => {
+    console.log(res);
     if (res.status === 401) {
       window.location.reload();
       return Promise.reject({ message: "请重新登录" });
@@ -38,10 +40,11 @@ export const http = async (url, { data, token, headers, ...customConfig }) => {
 export const useHttp = () => {
   const { user } = useSelector(
     (state) => ({
-      user: state.user,
+      user: state.user.user,
     }),
     shallowEqual
   );
+  console.log(user);
   return useCallback(
     (url, config) => {
       return http(url, { ...config, token: user.token });

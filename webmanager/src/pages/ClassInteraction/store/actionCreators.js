@@ -19,6 +19,15 @@ export function showStopModal() {
   };
 }
 
+export function showDeleteModal() {
+  return {
+    type: actionTypes.SET_DELETE_MODAL_VISIBLE,
+    payload: {
+      isDeleteModalShow: true,
+    },
+  };
+}
+
 export function hideStartModal() {
   return {
     type: actionTypes.SET_START_MODAL_VISIBLE,
@@ -33,6 +42,15 @@ export function hideStopModal() {
     type: actionTypes.SET_STOP_MODAL_VISIBLE,
     payload: {
       isStopModalShow: false,
+    },
+  };
+}
+
+export function hideDeleteModal() {
+  return {
+    type: actionTypes.SET_DELETE_MODAL_VISIBLE,
+    payload: {
+      isDeleteModalShow: false,
     },
   };
 }
@@ -67,6 +85,15 @@ export function setQuestionList(list) {
 }
 
 export function setCurrentQuestionItemId(id) {
+  return {
+    type: actionTypes.SET_CURRENT_QUESTION_ITEM_ID,
+    payload: {
+      id,
+    },
+  };
+}
+
+export function deleteQuestionItem(id) {
   return {
     type: actionTypes.SET_CURRENT_QUESTION_ITEM_ID,
     payload: {

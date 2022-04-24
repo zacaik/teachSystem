@@ -15,8 +15,8 @@ export const loginAction = (values) => {
     console.log(222);
     login(values).then((res) => {
       console.log(res);
-      localStorage.setItem("__auth-provider-token__", res.token);
-      dispatch(setUserAction(res));
+      localStorage.setItem("__auth-provider-token__", res.data.token);
+      dispatch(setUserAction(res.data));
     }).catch((err) => {
       message.error(err);
     });

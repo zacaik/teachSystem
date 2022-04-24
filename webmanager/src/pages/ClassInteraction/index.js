@@ -25,6 +25,7 @@ import {
   hideStopModal,
   setInteractIsFinished,
   setQuestionList,
+  hideDeleteModal,
 } from "./store/actionCreators";
 import { useHttp } from "../../utils/http";
 import moment from "moment";
@@ -34,10 +35,19 @@ const ClassInteraction = memo((props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { currentClass } = props;
   const [form] = Form.useForm();
-  const { isStartModalShow, isStopModalShow, questionList, currentIndex } =
-    useSelector((state) => state.classInteract, shallowEqual);
+  const {
+    isStartModalShow,
+    isStopModalShow,
+    questionList,
+    currentQuestionItemId,
+    isDeleteModalShow,
+  } = useSelector((state) => state.classInteract, shallowEqual);
+
+  console.log(questionList);
   const dispatch = useDispatch();
   const key = `open${Date.now()}`;
+
+  console.log(currentClass);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -51,20 +61,17 @@ const ClassInteraction = memo((props) => {
     setIsModalVisible(false);
   };
 
-  const fetchInteractList = async () => {
-    console.log(1)
-    const interactList = await request(
-      // "/scweb/interaction",
-      "interaction",
-      { data: { classId: 1 } },
-    );
-    console.log(interactList)
+  const fetchInteractList = async (currentClass) => {
+    const interactList = await request("scweb/interaction", {
+      data: { classId: currentClass || 1, sort: 1 },
+    });
+    console.log(interactList);
     dispatch(setQuestionList(interactList.data));
-  }
+  };
 
   useEffect(() => {
-    fetchInteractList();
-  }, []);
+    fetchInteractList(currentClass);
+  }, [currentClass]);
 
   const openNotification = () => {
     const btn = (
@@ -96,20 +103,6 @@ const ClassInteraction = memo((props) => {
     </Menu>
   );
 
-  // useEffect(() => {
-  //   if (questionList[currentIndex] && questionList[currentIndex].isFinished) {
-  //     openNotification();
-  //   }
-  // }, [currentIndex, questionList]);
-
-  // useEffect(() => {
-  //   // 组件卸载时清空状态
-  //   return () => {
-  //     dispatch(setInteractIsFinished(false));
-  //     // notification.close(key);
-  //   };
-  // }, []);
-
   return (
     <InteractionWrapper>
       <div className="interactHeader">
@@ -129,12 +122,30 @@ const ClassInteraction = memo((props) => {
       <div className="interactContent">
         <Card style={{ width: "49%" }} className="left">
           <div className="leftContent">
-            {questionList.map((item, index) => (
-              <QuestionContentItem
-                data={item}
-                key={item.id}
-              ></QuestionContentItem>
-            ))}
+            {questionList?.startingList?.map((item) => {
+              return (
+                <QuestionContentItem
+                  data={item}
+                  key={item.id}
+                ></QuestionContentItem>
+              );
+            })}
+            {questionList?.notStartList?.map((item) => {
+              return (
+                <QuestionContentItem
+                  data={item}
+                  key={item.id}
+                ></QuestionContentItem>
+              );
+            })}
+            {questionList?.finishList?.map((item) => {
+              return (
+                <QuestionContentItem
+                  data={item}
+                  key={item.id}
+                ></QuestionContentItem>
+              );
+            })}
           </div>
         </Card>
         <Card style={{ width: "49%" }} className="right">
@@ -196,6 +207,17 @@ const ClassInteraction = memo((props) => {
         <p>您确定要终止此次答题吗？</p>
         <p>终止后，可重新发布该题目</p>
       </Modal>
+      <Modal
+        title="注意"
+        visible={isDeleteModalShow}
+        onOk={handleDeleteModalOk}
+        onCancel={handleDeleteModalCancel}
+        okText="确认删除"
+        cancelText="取消"
+      >
+        <p>您确定要删除该互动项吗？</p>
+        <p>删除后，与之相关的所有回复记录也会被删除</p>
+      </Modal>
     </InteractionWrapper>
   );
 
@@ -231,7 +253,7 @@ const ClassInteraction = memo((props) => {
   function handleStartModalOk() {
     // 发送网络请求，开始答题
     dispatch(hideStartModal());
-    dispatch(setInteractIsStart(currentIndex, true));
+    dispatch(setInteractIsStart(currentQuestionItemId, true));
     message.success("题目发布成功！");
   }
 
@@ -242,12 +264,32 @@ const ClassInteraction = memo((props) => {
   function handleStopModalOk() {
     // 发送网络请求，终止答题
     dispatch(hideStopModal());
-    dispatch(setInteractIsFinished(currentIndex, true));
+    dispatch(setInteractIsFinished(currentQuestionItemId, true));
     openNotification();
   }
 
   function handleStopModalCancel() {
     dispatch(hideStopModal());
+  }
+
+  function handleDeleteModalOk() {
+    request(`scweb/interaction/${currentQuestionItemId}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        console.log(res);
+        message.success("删除成功");
+        dispatch(hideDeleteModal());
+        fetchInteractList();
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error(err);
+      });
+  }
+
+  function handleDeleteModalCancel() {
+    dispatch(hideDeleteModal());
   }
 });
 

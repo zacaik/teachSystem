@@ -27,9 +27,9 @@ function App() {
     const token = localStorage.getItem("__auth-provider-token__");
     if (token) {
       // data = await http("user", { token });
-      data = 111;
+      // data = 111;
     }
-    dispatch(setUserAction(data));
+    dispatch(setUserAction({ token }));
     return data;
   };
 
@@ -46,7 +46,7 @@ function App() {
       navigate("/");
     } else {
       navigate("/brief");
-      const classList = await http(`/scweb/class/list/${user.jobId}`, {});
+      const classList = await http(`scweb/class/list/${user.jobId}`, {});
       console.log(classList);
       setClassList(classList.data);
     }
