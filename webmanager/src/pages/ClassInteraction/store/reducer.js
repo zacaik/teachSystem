@@ -11,10 +11,10 @@ const defaultState = {
 function reducer(state = defaultState, action) {
   // const newQuestionList = [...state.questionList];
   switch (action.type) {
-    //   case actionTypes.SET_START_MODAL_VISIBLE:
-    //     return { ...state, isStartModalShow: action.payload.isStartModalShow };
-    //   case actionTypes.SET_STOP_MODAL_VISIBLE:
-    //     return { ...state, isStopModalShow: action.payload.isStopModalShow };
+    case actionTypes.SET_START_MODAL_VISIBLE:
+      return { ...state, isStartModalShow: action.payload.isStartModalShow };
+    case actionTypes.SET_STOP_MODAL_VISIBLE:
+      return { ...state, isStopModalShow: action.payload.isStopModalShow };
     //   case actionTypes.SET_INTERACT_IS_START:
     //   const { index, isStart } = action.payload;
     //     newQuestionList[index].isStart = isStart;

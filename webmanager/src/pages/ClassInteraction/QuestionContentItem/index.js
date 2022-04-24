@@ -106,11 +106,12 @@ const QuestionContentItem = memo((props) => {
   );
 
   function handleStart() {
-    dispatch(showStartModal());
     dispatch(setCurrentQuestionItemId(id));
+    dispatch(showStartModal());
   }
 
   function handleStop() {
+    dispatch(setCurrentQuestionItemId(id));
     dispatch(showStopModal());
   }
 
@@ -119,7 +120,7 @@ const QuestionContentItem = memo((props) => {
   }
 
   function handleDeleteQuestionItem() {
-    handleQuestionItemClick();
+    setCurrentQuestionItemId(id);
     dispatch(showDeleteModal());
   }
 });
