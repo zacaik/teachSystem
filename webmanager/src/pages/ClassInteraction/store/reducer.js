@@ -5,6 +5,7 @@ const defaultState = {
   isStopModalShow: false,
   isDeleteModalShow: false,
   questionList: {},
+  replyList: [],
   currentQuestionItemId: 0, // 当前选中的问题的id
 };
 
@@ -20,6 +21,11 @@ function reducer(state = defaultState, action) {
       return {
         ...state,
         questionList: { ...action.payload.list },
+      };
+    case actionTypes.SET_REPLY_LIST:
+      return {
+        ...state,
+        replyList: [...action.payload.list],
       };
     case actionTypes.SET_CURRENT_QUESTION_ITEM_ID:
       return {

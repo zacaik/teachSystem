@@ -64,6 +64,16 @@ export function setQuestionList(list) {
   };
 }
 
+export function setReplyList(list) {
+  return {
+    type: actionTypes.SET_REPLY_LIST,
+    payload: {
+      list,
+    },
+  };
+}
+
+
 export function setCurrentQuestionItemId(id) {
   return {
     type: actionTypes.SET_CURRENT_QUESTION_ITEM_ID,

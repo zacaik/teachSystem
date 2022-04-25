@@ -3,7 +3,8 @@ import { AnswerItemWrapper } from "./style";
 import { Comment, Tooltip, Avatar } from "antd";
 import moment from "moment";
 
-const ReplyItem = memo(() => {
+const ReplyItem = memo((props) => {
+  const { content } = props.data;
   return (
     <AnswerItemWrapper>
       <Comment
@@ -11,13 +12,7 @@ const ReplyItem = memo(() => {
         avatar={
           <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
         }
-        content={
-          <p>
-            We supply a series of design principles, practical patterns and high
-            quality design resources (Sketch and Axure), to help people create
-            their product prototypes beautifully and efficiently.
-          </p>
-        }
+        content={<p>{content}</p>}
         datetime={
           <Tooltip title={moment().format("YYYY-MM-DD HH:mm:ss")}>
             <span>{moment().fromNow()}</span>

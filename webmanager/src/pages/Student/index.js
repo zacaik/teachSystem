@@ -1,16 +1,28 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { StudentWrapper } from "./style";
 import { Select, Card, Button, Input, Table } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useHttp } from '../../utils/http';
 
-const Student = memo(() => {
+const Student = (props) => {
   const navigate = useNavigate();
+  const request = useHttp();
+
+  const { currentClass } = props;
+  console.log(props);
+  console.log(currentClass);
   const { Search } = Input;
+
+  const [studentList, setStudentList] = useState([]);
 
   const columns = [
     {
       title: "openId",
       dataIndex: "openId",
+    },
+    {
+      title: "id",
+      dataIndex: "id",
     },
     {
       title: "姓名",
@@ -27,7 +39,7 @@ const Student = memo(() => {
     },
     {
       title: "学号",
-      dataIndex: "studentId",
+      dataIndex: "jobId",
     },
     {
       title: "操作",
@@ -47,80 +59,20 @@ const Student = memo(() => {
     },
   ];
 
-  const data = [
-    {
-      openId: "08123",
-      name: "李俊燃",
-      class: "计算机二班",
-      sex: "男",
-      studentId: "1806010228",
-    },
-    {
-      openId: "08123",
-      name: "李俊燃",
-      class: "计算机二班",
-      sex: "男",
-      studentId: "1806010228",
-    },
-    {
-      openId: "08123",
-      name: "李俊燃",
-      sex: "男",
-      class: "计算机二班",
-      studentId: "1806010228",
-    },
-    {
-      openId: "08123",
-      name: "李俊燃",
-      sex: "男",
-      class: "计算机二班",
-      studentId: "1806010228",
-    },
-    {
-      openId: "08123",
-      name: "李俊燃",
-      sex: "男",
-      class: "计算机二班",
-      studentId: "1806010228",
-    },
-    {
-      openId: "08123",
-      name: "李俊燃",
-      sex: "男",
-      class: "计算机二班",
-      studentId: "1806010228",
-    },
-    {
-      openId: "08123",
-      name: "李俊燃",
-      sex: "男",
-      class: "计算机二班",
-      studentId: "1806010228",
-    },
-    {
-      openId: "08123",
-      name: "李俊燃",
-      sex: "男",
-      class: "计算机二班",
-      studentId: "1806010228",
-    },
-    {
-      openId: "08123",
-      name: "李俊燃",
-      sex: "男",
-      class: "计算机二班",
-      studentId: "1806010228",
-    },
-  ];
+  const fetchStudentList = async (classId) => {
+    const res = await request(`scweb/class/${classId}`);
+    // const res = await request(`scweb/class/${classId}?offset=${offset}&limit=${limit}`);
+    setStudentList(res.data.studentList);
+  }
+
+  useEffect(() => {
+    fetchStudentList(currentClass);
+  }, [currentClass]);
 
   return (
     <StudentWrapper>
       <div className="studentSummary">
         <div className="actionHeader">
-          <div className="selector">
-            选择课程：
-            <Select style={{ width: 200, margin: 10 }} />
-          </div>
           <div className="search">
             <Search
               placeholder="按学号或姓名搜索学生"
@@ -133,8 +85,8 @@ const Student = memo(() => {
         <div className="tableWrapper">
           <Table
             columns={columns}
-            dataSource={data}
-            pagination={{ pageSize: 8 }}
+            dataSource={studentList}
+            pagination={{ pageSize: 3 }}
           />
         </div>
       </div>
@@ -142,6 +94,6 @@ const Student = memo(() => {
   );
 
   function handleSearch() {}
-});
+};
 
 export default Student;

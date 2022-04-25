@@ -46,7 +46,7 @@ function App() {
       navigate("/");
     } else {
       navigate("/brief");
-      const classList = await http(`scweb/class/list/${user.jobId}`, {});
+      const classList = await http(`scweb/class/list/${user.jobId || 277}`, {});
       console.log(classList);
       setClassList(classList.data);
     }

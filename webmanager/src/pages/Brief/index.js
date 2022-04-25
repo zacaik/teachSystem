@@ -15,6 +15,8 @@ const Brief = memo((props) => {
   const { currentClass } = props;
   const { Option } = Select;
 
+  console.log(props);
+
   let { user } = useSelector(
     (state) => ({
       user: state.user.user,

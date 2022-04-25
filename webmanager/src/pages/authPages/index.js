@@ -20,6 +20,7 @@ const { Header, Content, Footer, Sider } = Layout;
 export default function AuthPage(props) {
   const [collapsed, setCollapsed] = useState(false);
   const { currentClass, setCurrentClass, classList } = props;
+  console.log(currentClass);
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
@@ -70,11 +71,21 @@ export default function AuthPage(props) {
           </Header>
           <Content style={{ margin: "0 16px" }}>
             <Routes>
-              <Route path="/brief" element={<Brief currentClass={currentClass} />} />
+              <Route
+                path="/brief"
+                element={<Brief currentClass={currentClass} />}
+              />
               <Route path="/course" element={<Course />} />
-              <Route path="/student" element={<Student />} exact />
+              <Route
+                path="/student"
+                element={<Student currentClass={currentClass} />}
+                exact
+              />
               <Route path="/student/detail/:id" element={<StudentDetail />} />
-              <Route path="/classInteraction" element={<ClassInteraction currentClass={currentClass} />} />
+              <Route
+                path="/classInteraction"
+                element={<ClassInteraction currentClass={currentClass} />}
+              />
             </Routes>
           </Content>
           <Footer style={{ textAlign: "center" }}>

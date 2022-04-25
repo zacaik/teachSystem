@@ -11,3 +11,7 @@ html {
 html body #root .App {
   min-height: 100vh;
 }
+
+.active {
+  background-color: rgb(235, 231, 231);
+}

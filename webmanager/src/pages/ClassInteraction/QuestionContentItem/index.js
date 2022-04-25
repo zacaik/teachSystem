@@ -8,18 +8,22 @@ import {
   showStartModal,
   showStopModal,
   showDeleteModal,
-  setInteractIsFinished,
-  setQuestionItemCountDownTime,
-  setCurrentIndex,
   setCurrentQuestionItemId,
 } from "../store/actionCreators";
 import { useEffect } from "react";
+import classNames from "classnames";
 
 const QuestionContentItem = memo((props) => {
   console.log(props);
   const { id, title, start, finish, createTime } = props.data;
   const dispatch = useDispatch();
   const [actionList, setActionList] = useState([]);
+  const [isActive, setIsActive] = useState(false);
+
+  const { currentQuestionItemId } = useSelector(
+    (state) => state.classInteract,
+    shallowEqual
+  );
 
   useEffect(() => {
     const newActionList = [];
@@ -78,7 +82,14 @@ const QuestionContentItem = memo((props) => {
   }, [start, finish]);
 
   return (
-    <QuestionContentItemWrapper onClick={handleQuestionItemClick}>
+    <QuestionContentItemWrapper
+      onClick={handleQuestionItemClick}
+      onMouseEnter={() => setIsActive(true)}
+      onMouseLeave={() => setIsActive(false)}
+      className={classNames("", {
+        active: isActive || currentQuestionItemId === id,
+      })}
+    >
       <div className="question-header">
         <div className="title">
           <Comment

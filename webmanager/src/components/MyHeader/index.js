@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { HeaderWrapper } from "./style";
 import { Avatar, Select } from "antd";
 
@@ -6,12 +6,19 @@ export default function MyHeader(props) {
   const { currentClass, setCurrentClass, classList } = props;
   const { Option } = Select;
   console.log(classList);
+  console.log(currentClass);
+
+  useEffect(() => {
+    // 初始化当前选中课程
+    setCurrentClass(classList?.[0]?.id);
+  }, [classList])
+
   return (
     <HeaderWrapper>
       <div className="left">
         当前课程：
         <Select
-          defaultValue={(classList || [])[0]}
+          defaultValue={(classList || [])[0]?.id}
           style={{ width: 300 }}
           onChange={handleChange}
         >

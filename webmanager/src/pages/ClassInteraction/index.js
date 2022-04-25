@@ -16,7 +16,7 @@ import {
 import { PlusOutlined, SmileOutlined } from "@ant-design/icons";
 import { Comment } from "@icon-park/react";
 import QuestionContentItem from "./QuestionContentItem";
-import ReplyItem from "./replyItem";
+import ReplyItem from "./ReplyItem";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import {
   showStartModal,
@@ -26,6 +26,7 @@ import {
   setInteractIsFinished,
   setQuestionList,
   hideDeleteModal,
+  setReplyList,
 } from "./store/actionCreators";
 import { useHttp } from "../../utils/http";
 import moment from "moment";
@@ -39,6 +40,7 @@ const ClassInteraction = memo((props) => {
     isStartModalShow,
     isStopModalShow,
     questionList,
+    replyList,
     currentQuestionItemId,
     isDeleteModalShow,
   } = useSelector((state) => state.classInteract, shallowEqual);
@@ -48,6 +50,7 @@ const ClassInteraction = memo((props) => {
   const key = `open${Date.now()}`;
 
   console.log(currentClass);
+  console.log(replyList);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -69,9 +72,19 @@ const ClassInteraction = memo((props) => {
     dispatch(setQuestionList(interactList.data));
   };
 
+  const fetchReplyList = async (id) => {
+    const replyList = await request(`scweb/replay/${id}`);
+    console.log(replyList);
+    dispatch(setReplyList(replyList.data));
+  };
+
   useEffect(() => {
     fetchInteractList(currentClass);
   }, [currentClass]);
+
+  useEffect(() => {
+    fetchReplyList(currentQuestionItemId);
+  }, [currentQuestionItemId]);
 
   const openNotification = () => {
     const btn = (
@@ -149,7 +162,11 @@ const ClassInteraction = memo((props) => {
           </div>
         </Card>
         <Card style={{ width: "49%" }} className="right">
-          <div className="rightContent"></div>
+          <div className="rightContent">
+            {(replyList || []).map((item) => {
+              return <ReplyItem data={item} key={item.id}></ReplyItem>;
+            })}
+          </div>
         </Card>
       </div>
       <Modal
