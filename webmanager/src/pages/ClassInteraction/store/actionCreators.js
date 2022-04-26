@@ -82,7 +82,6 @@ export function addReplyList(list) {
   };
 }
 
-
 export function setCurrentQuestionItemId(id) {
   return {
     type: actionTypes.SET_CURRENT_QUESTION_ITEM_ID,

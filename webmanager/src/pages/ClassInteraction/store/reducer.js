@@ -1,10 +1,11 @@
 import * as actionTypes from "./constants";
 
 const defaultState = {
+  isAddModalShow: false,
   isStartModalShow: false,
   isStopModalShow: false,
   isDeleteModalShow: false,
-  questionList: {},
+  questionList: [],
   replyList: [],
   currentQuestionItemId: 0, // 当前选中的问题的id
 };
@@ -20,7 +21,7 @@ function reducer(state = defaultState, action) {
     case actionTypes.SET_QUESTION_LIST:
       return {
         ...state,
-        questionList: { ...action.payload.list },
+        questionList: [ ...action.payload.list.startingList, ...action.payload.list.notStartList, ...action.payload.list.finishList ],
       };
     case actionTypes.SET_REPLY_LIST:
       return {
