@@ -27,6 +27,11 @@ function reducer(state = defaultState, action) {
         ...state,
         replyList: [...action.payload.list],
       };
+    case actionTypes.ADD_REPLY_LIST:
+      return {
+        ...state,
+        replyList: [...state.replyList, ...action.payload.list],
+      };
     case actionTypes.SET_CURRENT_QUESTION_ITEM_ID:
       return {
         ...state,

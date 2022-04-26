@@ -12,6 +12,9 @@ import {
   Form,
   message,
   notification,
+  List,
+  Skeleton,
+  Divider,
 } from "antd";
 import { PlusOutlined, SmileOutlined } from "@ant-design/icons";
 import { Comment } from "@icon-park/react";
@@ -27,15 +30,25 @@ import {
   setQuestionList,
   hideDeleteModal,
   setReplyList,
+  addReplyList,
 } from "./store/actionCreators";
 import { useHttp } from "../../utils/http";
 import moment from "moment";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const ClassInteraction = memo((props) => {
-  const request = useHttp();
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const { currentClass } = props;
+  console.log(props);
+  const request = useHttp();
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [allReplyLength, setAllReplyLength] = useState(0);
+  const [curQuestionItem, setCurQuestionItem] = useState(null);
+
   const {
     isStartModalShow,
     isStopModalShow,
@@ -46,7 +59,6 @@ const ClassInteraction = memo((props) => {
   } = useSelector((state) => state.classInteract, shallowEqual);
 
   console.log(questionList);
-  const dispatch = useDispatch();
   const key = `open${Date.now()}`;
 
   console.log(currentClass);
@@ -64,6 +76,23 @@ const ClassInteraction = memo((props) => {
     setIsModalVisible(false);
   };
 
+  const loadMoreFinishReplyList = () => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    loadReplyListByOffset(currentQuestionItemId, offset + 1);
+    setOffset(offset + 1);
+  };
+
+  const loadMoreStartingReplyList = () => {
+    const replyList = await request(
+      `scweb/replay/${currentQuestionItemId}`
+    );
+    console.log(replyList);
+    dispatch(setReplyList(replyList.data));
+  }
+
   const fetchInteractList = async (currentClass) => {
     const interactList = await request("scweb/interaction", {
       data: { classId: currentClass || 1, sort: 1 },
@@ -72,8 +101,19 @@ const ClassInteraction = memo((props) => {
     dispatch(setQuestionList(interactList.data));
   };
 
-  const fetchReplyList = async (id) => {
-    const replyList = await request(`scweb/replay/${id}`);
+  const loadReplyListByOffset = async (id, offset = 0) => {
+    const replyList = await request(
+      `scweb/replay/${id}?offset=${offset}&limit=20`
+    );
+    setLoading(false);
+    dispatch(addReplyList(replyList.data));
+  };
+
+  const fetchReplyList = async (id, offset = 0) => {
+    console.log(id);
+    const replyList = await request(
+      `scweb/replay/${id}?offset=${offset}&limit=10`
+    );
     console.log(replyList);
     dispatch(setReplyList(replyList.data));
   };
@@ -82,9 +122,18 @@ const ClassInteraction = memo((props) => {
     fetchInteractList(currentClass);
   }, [currentClass]);
 
-  useEffect(() => {
+  useEffect(async () => {
     fetchReplyList(currentQuestionItemId);
+    setOffset(0);
+    const replyList = await request(`scweb/replay/${currentQuestionItemId}`);
+    setAllReplyLength(replyList.data.length);
   }, [currentQuestionItemId]);
+
+  useEffect(() => {
+    const questionListArr = [...questionList.notStartList, ...questionList.startingList, ...questionList.finishList];
+    const curQuestionItem = questionListArr.find((item) => item.id === currentQuestionItemId);
+    setCurQuestionItem(curQuestionItem);
+  }, [questionList]);
 
   const openNotification = () => {
     const btn = (
@@ -162,10 +211,30 @@ const ClassInteraction = memo((props) => {
           </div>
         </Card>
         <Card style={{ width: "49%" }} className="right">
-          <div className="rightContent">
-            {(replyList || []).map((item) => {
-              return <ReplyItem data={item} key={item.id}></ReplyItem>;
-            })}
+          <div
+            className="rightContent"
+            id="scrollableDiv"
+            style={{
+              height: "100%",
+              overflow: "auto",
+            }}
+          >
+            <InfiniteScroll
+              dataLength={replyList.length}
+              next={curQuestionItem.finish === 1 ? loadMoreFinishReplyList : loadMoreStartingReplyList}
+              hasMore={replyList.length < allReplyLength}
+              loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+              endMessage={<Divider plain>已加载完全部回答 🤐</Divider>}
+              scrollableTarget="scrollableDiv"
+            >
+              <List
+                dataSource={replyList}
+                split
+                renderItem={(item) => (
+                  <ReplyItem data={item} key={item.id}></ReplyItem>
+                )}
+              />
+            </InfiniteScroll>
           </div>
         </Card>
       </div>
@@ -254,16 +323,6 @@ const ClassInteraction = memo((props) => {
       setIsModalVisible(false);
       fetchInteractList();
     });
-    // dispatch(
-    //   setQuestionList([
-    //     {
-    //       type: "qa",
-    //       isStart: false,
-    //       isFinished: false,
-    //       ...values,
-    //     },
-    //   ])
-    // );
   }
 
   function handleStartModalOk() {
@@ -279,6 +338,16 @@ const ClassInteraction = memo((props) => {
         message.success("题目发布成功！");
         dispatch(hideStartModal());
         fetchInteractList();
+        let interval = setInterval(() => {
+          const replyList = await request(
+            `scweb/replay/${id}?offset=${offset}&limit=10`
+          );
+          console.log(replyList);
+          dispatch(setReplyList(replyList.data));
+          if (replyList.length > 10) {
+            clearInterval(interval);
+          }
+        }, 1000 * 30);
       })
       .catch((err) => {
         console.log(err);

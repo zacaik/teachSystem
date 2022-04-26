@@ -73,6 +73,15 @@ export function setReplyList(list) {
   };
 }
 
+export function addReplyList(list) {
+  return {
+    type: actionTypes.ADD_REPLY_LIST,
+    payload: {
+      list,
+    },
+  };
+}
+
 
 export function setCurrentQuestionItemId(id) {
   return {

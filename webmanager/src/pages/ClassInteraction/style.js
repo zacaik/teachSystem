@@ -38,9 +38,12 @@ export const InteractionWrapper = styled.div`
       max-height: 80vh;
       overflow-y: scroll;
     }
-    .left > .ant-card-body {
-        padding: 0;
+    .right::-webkit-scrollbar {
+      display: none;
     }
+    /* .left > .ant-card-body {
+        padding: 0;
+    } */
   }
 `;
 

@@ -15,3 +15,8 @@ html body #root .App {
 .active {
   background-color: rgb(235, 231, 231);
 }
+
+.ant-card-body {
+  padding: 10px 0 10px 20px!important;
+  height: 100%;
+}

@@ -4,19 +4,18 @@ import { Comment, Tooltip, Avatar } from "antd";
 import moment from "moment";
 
 const ReplyItem = memo((props) => {
-  const { content } = props.data;
+  const { content, name, createTime, avatarUrl } = props.data;
+  // console.log(props);
   return (
     <AnswerItemWrapper>
       <Comment
-        author={<a>Han Solo</a>}
+        author={<a>{name}</a>}
         avatar={
           <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
         }
         content={<p>{content}</p>}
         datetime={
-          <Tooltip title={moment().format("YYYY-MM-DD HH:mm:ss")}>
-            <span>{moment().fromNow()}</span>
-          </Tooltip>
+          <span>{createTime}</span>
         }
       />
     </AnswerItemWrapper>
