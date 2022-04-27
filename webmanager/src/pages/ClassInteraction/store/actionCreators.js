@@ -64,20 +64,22 @@ export function setQuestionList(list) {
   };
 }
 
-export function setReplyList(list) {
+export function setReplyList(list, id) {
   return {
     type: actionTypes.SET_REPLY_LIST,
     payload: {
       list,
+      id,
     },
   };
 }
 
-export function addReplyList(list) {
+export function addReplyList(list, id) {
   return {
     type: actionTypes.ADD_REPLY_LIST,
     payload: {
       list,
+      id,
     },
   };
 }

@@ -6,11 +6,12 @@ const defaultState = {
   isStopModalShow: false,
   isDeleteModalShow: false,
   questionList: [],
-  replyList: [],
+  replyList: {},
   currentQuestionItemId: 0, // 当前选中的问题的id
 };
 
 function reducer(state = defaultState, action) {
+  const newReplyList = { ...state.replyList };
   switch (action.type) {
     case actionTypes.SET_START_MODAL_VISIBLE:
       return { ...state, isStartModalShow: action.payload.isStartModalShow };
@@ -21,17 +22,23 @@ function reducer(state = defaultState, action) {
     case actionTypes.SET_QUESTION_LIST:
       return {
         ...state,
-        questionList: [ ...action.payload.list.startingList, ...action.payload.list.notStartList, ...action.payload.list.finishList ],
+        questionList: [
+          ...action.payload.list.startingList,
+          ...action.payload.list.notStartList,
+          ...action.payload.list.finishList,
+        ],
       };
     case actionTypes.SET_REPLY_LIST:
+      newReplyList[action.payload.id] = action.payload.list;
       return {
         ...state,
-        replyList: [...action.payload.list],
+        replyList: newReplyList,
       };
     case actionTypes.ADD_REPLY_LIST:
+      newReplyList[action.payload.id].push(...action.payload.list);
       return {
         ...state,
-        replyList: [...state.replyList, ...action.payload.list],
+        replyList: newReplyList,
       };
     case actionTypes.SET_CURRENT_QUESTION_ITEM_ID:
       return {

@@ -41,9 +41,6 @@ export const InteractionWrapper = styled.div`
     .right::-webkit-scrollbar {
       display: none;
     }
-    /* .left > .ant-card-body {
-        padding: 0;
-    } */
   }
 `;
 
