@@ -102,3 +102,12 @@ export function deleteQuestionItem(id) {
   };
 }
 
+export function setIntervalAction(interval, id) {
+  return {
+    type: actionTypes.SET_INTERVAL,
+    payload: {
+      id,
+      interval,
+    },
+  };
+}

@@ -8,6 +8,7 @@ const defaultState = {
   questionList: [],
   replyList: {},
   currentQuestionItemId: 0, // 当前选中的问题的id
+  fetchReplyListIntervals: {}, // 保存正在获取回复数据的互动项的定时器
 };
 
 function reducer(state = defaultState, action) {
@@ -44,6 +45,13 @@ function reducer(state = defaultState, action) {
       return {
         ...state,
         currentQuestionItemId: action.payload.id,
+      };
+    case actionTypes.SET_INTERVAL:
+      const newFetchReplyListIntervals = { ...state.fetchReplyListIntervals };
+      newFetchReplyListIntervals[action.payload.id] = action.payload.interval;
+      return {
+        ...state,
+        fetchReplyListIntervals: newFetchReplyListIntervals,
       };
     default:
       return state;

@@ -7,7 +7,8 @@ import {
   hideStopModal,
   setQuestionList,
   hideDeleteModal,
-  setReplyList
+  setReplyList,
+  setIntervalAction
 } from "../store/actionCreators";
 import { Comment } from "@icon-park/react";
 import moment from "moment";
@@ -139,16 +140,13 @@ export default function Modals(props) {
         message.success("题目发布成功！");
         dispatch(hideStartModal());
         fetchInteractList();
-        let interval = setInterval(async () => {
+        const interval = setInterval(async () => {
           const replyList = await request(
             `scweb/replay/${currentQuestionItemId}`
           );
-          console.log(replyList);
           dispatch(setReplyList(replyList.data, currentQuestionItemId));
-          if (replyList.length > 10) {
-            clearInterval(interval);
-          }
         }, 1000 * 30);
+        dispatch(setIntervalAction(interval, currentQuestionItemId));
       })
       .catch((err) => {
         console.log(err);
