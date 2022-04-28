@@ -129,12 +129,16 @@ export default function ReplyContainer() {
         offset: offset,
       });
       dispatch(addReplyList(newReplyList, currentQuestionItemId));
-    } else {
+    } else if (curQuestionItem?.start === 1) {
+      // 正在进行的互动
       const newReplyList = await fetchReplyList({
         id: currentQuestionItemId,
         isAll: true,
       });
       dispatch(setReplyList(newReplyList, currentQuestionItemId));
+    } else {
+      // 暂未开始的互动
+      setHasMore(false);
     }
   }
 }
