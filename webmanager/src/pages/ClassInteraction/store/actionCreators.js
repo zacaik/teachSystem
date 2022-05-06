@@ -111,3 +111,13 @@ export function setIntervalAction(interval, id) {
     },
   };
 }
+
+export function setHasMoreList(hasMore, id) {
+  return {
+    type: actionTypes.SET_HASMORE_LIST,
+    payload: {
+      id,
+      hasMore,
+    },
+  };
+}

@@ -140,13 +140,6 @@ export default function Modals(props) {
         message.success("题目发布成功！");
         dispatch(hideStartModal());
         fetchInteractList();
-        const interval = setInterval(async () => {
-          const replyList = await request(
-            `scweb/replay/${currentQuestionItemId}`
-          );
-          dispatch(setReplyList(replyList.data, currentQuestionItemId));
-        }, 1000 * 30);
-        dispatch(setIntervalAction(interval, currentQuestionItemId));
       })
       .catch((err) => {
         console.log(err);

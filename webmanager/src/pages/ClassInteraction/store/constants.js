@@ -9,3 +9,4 @@ export const SET_INTERACT_LIST = "SET_INTERACT_LIST";
 export const SET_REPLY_LIST = "SET_REPLY_LIST";
 export const ADD_REPLY_LIST = "ADD_REPLY_LIST";
 export const SET_INTERVAL = "SET_INTERVAL";
+export const SET_HASMORE_LIST = "SET_HASMORE_LIST";

@@ -7,6 +7,7 @@ const defaultState = {
   isDeleteModalShow: false,
   questionList: [],
   replyList: {},
+  hasMoreList: {}, // 指示每个互动项的回复列表是否请求完毕
   currentQuestionItemId: 0, // 当前选中的问题的id
   fetchReplyListIntervals: {}, // 保存正在获取回复数据的互动项的定时器
 };
@@ -52,6 +53,13 @@ function reducer(state = defaultState, action) {
       return {
         ...state,
         fetchReplyListIntervals: newFetchReplyListIntervals,
+      };
+    case actionTypes.SET_HASMORE_LIST:
+      const newHasMoreList = { ...state.hasMoreList };
+      newHasMoreList[action.payload.id] = action.payload.hasMore;
+      return {
+        ...state,
+        hasMoreList: newHasMoreList,
       };
     default:
       return state;
