@@ -5,11 +5,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import ReplyItem from "../ReplyItem";
 import { useHttp } from "../../../utils/http";
 import {
-  setQuestionList,
   setReplyList,
   addReplyList,
   setHasMoreList,
-  setIntervalAction,
 } from "../store/actionCreators";
 
 export default function ReplyContainer() {
@@ -18,28 +16,24 @@ export default function ReplyContainer() {
 
   const [curQuestionItem, setCurQuestionItem] = useState(null);
 
-  const {
-    questionList,
-    replyList,
-    currentQuestionItemId,
-    fetchReplyListIntervals,
-    hasMoreList,
-  } = useSelector((state) => state.classInteract, shallowEqual);
+  const { questionList, replyList, currentQuestionItemId, hasMoreList } =
+    useSelector((state) => state.classInteract, shallowEqual);
 
   useEffect(() => {
     const curQuestion = questionList.find(
       (item) => item.id === currentQuestionItemId
     );
-    console.log(curQuestion);
     setCurQuestionItem(curQuestion);
   }, [questionList, currentQuestionItemId]);
 
+  // 初始化选中互动项的状态
   useEffect(() => {
     if (hasMoreList[currentQuestionItemId] == undefined) {
       dispatch(setHasMoreList(true, currentQuestionItemId));
     }
   }, [hasMoreList, currentQuestionItemId]);
 
+  // 加载选中互动项的回复列表
   useEffect(async () => {
     if (!replyList[currentQuestionItemId]) {
       const replyList = await fetchReplyList({ id: currentQuestionItemId });
@@ -63,7 +57,13 @@ export default function ReplyContainer() {
             next={loadMoreReplyList}
             hasMore={!!hasMoreList[currentQuestionItemId]}
             loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-            endMessage={<Divider plain>已加载完全部回答 🤐</Divider>}
+            endMessage={
+              <Divider plain>
+                {curQuestionItem?.start === 0 && curQuestionItem?.finish === 0
+                  ? "还未开始互动哟"
+                  : "已加载完全部回答"}
+              </Divider>
+            }
             scrollableTarget="scrollableDiv"
           >
             <List
@@ -92,7 +92,6 @@ export default function ReplyContainer() {
     const curQuestionItem = questionList.find(
       (item) => item.id === currentQuestionItemId
     );
-    console.log(curQuestionItem);
     if (curQuestionItem?.finish === 1 && replyList.data.length < limit) {
       dispatch(setHasMoreList(false, currentQuestionItemId));
     }

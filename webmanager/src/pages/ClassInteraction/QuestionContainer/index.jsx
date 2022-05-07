@@ -48,6 +48,9 @@ export default function QuestionContainer(props) {
       if (item?.finish === 1) {
         clearInterval(fetchReplyListIntervals[item.id]);
       }
+      if (item.start === 0 && item.finish === 0) {
+        dispatch(setHasMoreList(false, item.id));
+      }
     });
   }, [questionList, fetchReplyListIntervals]);
 

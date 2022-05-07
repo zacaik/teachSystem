@@ -8,7 +8,7 @@ import {
   setQuestionList,
   hideDeleteModal,
   setReplyList,
-  setIntervalAction
+  setHasMoreList
 } from "../store/actionCreators";
 import { Comment } from "@icon-park/react";
 import moment from "moment";
@@ -113,11 +113,11 @@ export default function Modals(props) {
     console.log(values);
     request("scweb/interaction", {
       data: {
-        classId: currentClass || "1",
+        classId: currentClass + "" || "1",
         title: values.questionContent,
-        createTime: moment().format("YYYY-MM-DD"),
+        createTime: moment().format("YYYY-MM-DD HH:MM:SS"),
         type: "0",
-        content: "",
+        content: "12312",
       },
       method: "POST",
     }).then(() => {
@@ -163,6 +163,7 @@ export default function Modals(props) {
         console.log(res);
         message.success("互动已结束！");
         dispatch(hideStopModal());
+        dispatch(setHasMoreList(false, currentQuestionItemId));
         fetchInteractList();
       })
       .catch((err) => {
