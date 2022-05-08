@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 import { InteractionWrapper, QuestionItem } from "./style";
 import {
   Button,
@@ -7,20 +7,12 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Comment } from "@icon-park/react";
-import { useSelector, shallowEqual, useDispatch } from "react-redux";
-import {
-  setQuestionList,
-  setReplyList,
-  addReplyList,
-} from "./store/actionCreators";
-import { useHttp } from "../../utils/http";
 import QuestionContainer from "./QuestionContainer";
 import ReplyContainer from './ReplyContainer';
 import Modals from "./Modals";
 
 const ClassInteraction = memo((props) => {
   const { currentClass } = props;
-  console.log(props);
 
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 

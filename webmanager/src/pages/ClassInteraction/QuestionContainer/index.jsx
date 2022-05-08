@@ -1,6 +1,6 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
-import { Button, Card } from "antd";
+import { Card } from "antd";
 import QuestionContentItem from "../QuestionContentItem";
 import { useHttp } from "../../../utils/http";
 import {

@@ -1,12 +1,10 @@
-import React, { memo, useEffect } from "react";
+import React, { useEffect } from "react";
 import { HeaderWrapper } from "./style";
 import { Avatar, Select } from "antd";
 
 export default function MyHeader(props) {
   const { currentClass, setCurrentClass, classList } = props;
   const { Option } = Select;
-  console.log(classList);
-  console.log(currentClass);
 
   useEffect(() => {
     // 初始化当前选中课程
@@ -18,7 +16,7 @@ export default function MyHeader(props) {
       <div className="left">
         当前课程：
         <Select
-          defaultValue={(classList || [])[0]?.id}
+          value={currentClass}
           style={{ width: 300 }}
           onChange={handleChange}
         >
@@ -41,8 +39,6 @@ export default function MyHeader(props) {
   );
 
   function handleChange(value, option) {
-    console.log(value);
-    console.log(option);
     setCurrentClass(value);
   }
 };

@@ -30,7 +30,7 @@ const Brief = memo((props) => {
   };
 
   useEffect(() => {
-    getData();
+    // getData();
   }, []);
   const G = G2.getEngine("canvas");
 
@@ -272,31 +272,31 @@ const Brief = memo((props) => {
       absentNumber: 10,
     },
     {
-      key: "1",
+      key: "2",
       name: "李俊燃",
       studentId: "1806010228",
       absentNumber: 9,
     },
     {
-      key: "1",
+      key: "3",
       name: "李俊燃",
       studentId: "1806010228",
       absentNumber: 8,
     },
     {
-      key: "1",
+      key: "4",
       name: "李俊燃",
       studentId: "1806010228",
       absentNumber: 7,
     },
     {
-      key: "1",
+      key: "5",
       name: "李俊燃",
       studentId: "1806010228",
       absentNumber: 6,
     },
     {
-      key: "1",
+      key: "6",
       name: "李俊燃",
       studentId: "1806010228",
       absentNumber: 5,
