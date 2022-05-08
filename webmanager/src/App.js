@@ -25,29 +25,27 @@ function App() {
   const bootStrapUser = async () => {
     let data = null;
     const token = localStorage.getItem("__auth-provider-token__");
+    console.log(token);
     if (token) {
       // data = await http("user", { token });
-      // data = 111;
+      data = 111;
     }
-    dispatch(setUserAction({ token }));
-    return data;
+    dispatch(setUserAction(data));
   };
 
   useEffect(() => {
     if (!user) {
-      bootStrapUser().then((res) => {
-        user = res;
-      });
+      bootStrapUser();
     }
   }, []);
 
   useEffect(async () => {
+    console.log("user", user);
     if (!user) {
       navigate("/");
     } else {
       navigate("/brief");
-      const classList = await http(`scweb/class/list/${user.jobId || 277}`, {});
-      console.log(classList);
+      const classList = await http(`scweb/class/list/${user.id || 277}`, {});
       setClassList(classList.data);
     }
   }, [user]);
