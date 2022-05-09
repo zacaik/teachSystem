@@ -14,7 +14,6 @@ function App() {
   const navigate = useNavigate();
   const [currentClass, setCurrentClass] = useState("");
   const [classList, setClassList] = useState([]);
-  console.log(classList);
   let { user } = useSelector(
     (state) => ({
       user: state.user.user,
@@ -23,14 +22,14 @@ function App() {
   );
 
   const bootStrapUser = async () => {
-    let data = null;
     const token = localStorage.getItem("__auth-provider-token__");
-    console.log(token);
     if (token) {
-      // data = await http("user", { token });
-      data = 111;
+      http("scweb/teacher/byToken", { data: { token } }).then((res) => {
+        if (res.data) {
+          dispatch(setUserAction(res.data));
+        }
+      });
     }
-    dispatch(setUserAction(data));
   };
 
   useEffect(() => {

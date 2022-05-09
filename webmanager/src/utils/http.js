@@ -3,7 +3,10 @@ import { baseUrl } from "../consts";
 import { useCallback } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 
-export const http = async (url, { data, token, headers, ...customConfig }) => {
+export const http = async (
+  url,
+  { data, token, headers, isBody = false, ...customConfig }
+) => {
   console.log(token);
   const config = {
     method: "GET",
@@ -14,7 +17,10 @@ export const http = async (url, { data, token, headers, ...customConfig }) => {
     ...customConfig,
   };
 
-  if (config.method.toUpperCase() === "GET" || config.method.toUpperCase() === "PUT") {
+  if (
+    config.method.toUpperCase() === "GET" ||
+    (config.method.toUpperCase() === "PUT" && !isBody)
+  ) {
     if (data) {
       url = `${url}?${qs.stringify(data)}`;
     }

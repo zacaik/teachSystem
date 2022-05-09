@@ -1,26 +1,35 @@
 import styled from "styled-components";
 import { Button, Input, Form, Checkbox } from "antd";
 import { useDispatch } from "react-redux";
-import { loginAction } from "./store/actionCreators";
+import { setUserAction } from "./store/actionCreators";
 import { useNavigate } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { login } from "../../service/user";
+import { message } from "antd";
 
 const LoginPage = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
-    try {
-      console.log(values);
-      values.rememberMe ? values.rememberMe = 1 : values.rememberMe = 0;
-      console.log(values);
-      dispatch(loginAction(values));
-      navigate("brief");
-    } catch (error) {}
+    values.rememberMe ? (values.rememberMe = 1) : (values.rememberMe = 0);
+    login(values)
+      .then((res) => {
+        if (!res.data) {
+          message.error(res.msg);
+        } else {
+          localStorage.setItem("__auth-provider-token__", res.data.token);
+          dispatch(setUserAction(res.data.user));
+          navigate("brief");
+        }
+      })
+      .catch((err) => {
+        message.error(err);
+      });
   };
 
   return (
-    <Form onFinish={handleSubmit} >
+    <Form onFinish={handleSubmit}>
       <Form.Item
         name="phone"
         rules={[{ required: true, message: "请输入注册时填写的手机号!" }]}
@@ -40,7 +49,12 @@ const LoginPage = (props) => {
           placeholder="Password"
         />
       </Form.Item>
-      <Form.Item name="rememberMe" valuePropName="checked" wrapperCol={{ span: 8, offset: 19 }} style={{ margin: "5px 0px" }}>
+      <Form.Item
+        name="rememberMe"
+        valuePropName="checked"
+        wrapperCol={{ span: 8, offset: 19 }}
+        style={{ margin: "5px 0px" }}
+      >
         <Checkbox>记住我</Checkbox>
       </Form.Item>
       <Form.Item>

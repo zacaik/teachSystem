@@ -1,10 +1,18 @@
 import React, { useEffect } from "react";
 import { HeaderWrapper } from "./style";
-import { Avatar, Select } from "antd";
+import { Avatar, Select, Button } from "antd";
+import { useSelector, shallowEqual } from "react-redux";
 
 export default function MyHeader(props) {
   const { currentClass, setCurrentClass, classList } = props;
   const { Option } = Select;
+
+  const { user } = useSelector(
+    (state) => ({
+      user: state.user.user,
+    }),
+    shallowEqual
+  );
 
   useEffect(() => {
     // 初始化当前选中课程
@@ -31,8 +39,9 @@ export default function MyHeader(props) {
       </div>
       <div className="right">
         <div className="user">
-          <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }} className="avatar">凡</Avatar>
-          <p className="userName">欢迎您，{'刘'}老师</p>
+          {/* <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }} className="avatar">凡</Avatar> */}
+          <p className="userName">欢迎您，{user.name}老师</p>
+          <Button className="logout" onClick={handleLogOut} type="primary">退出</Button>
         </div>
       </div>
     </HeaderWrapper>
@@ -40,5 +49,10 @@ export default function MyHeader(props) {
 
   function handleChange(value, option) {
     setCurrentClass(value);
+  }
+
+  function handleLogOut() {
+    localStorage.removeItem("__auth-provider-token__");
+    window.Arraylocation.reload();
   }
 };

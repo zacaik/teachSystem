@@ -12,7 +12,6 @@ export const HeaderWrapper = styled.div`
   .right {
     .user {
       display: flex;
-      width: 200px;
       .avatar {
         margin-top: 16px;
       }
@@ -22,6 +21,11 @@ export const HeaderWrapper = styled.div`
         font-size: 16px;
         font-family: Avenir-Medium;
         color: #fff;
+      }
+      .logout {
+        font-size: 16px;
+        color: #fff;
+        margin: 13px 10px 0;
       }
     }
   }

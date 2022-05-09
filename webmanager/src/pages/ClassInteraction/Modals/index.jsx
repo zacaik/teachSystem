@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React from "react";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { Button, Form, Modal, notification, Input, message } from "antd";
 import { useHttp } from "../../../utils/http";
@@ -7,7 +7,6 @@ import {
   hideStopModal,
   setQuestionList,
   hideDeleteModal,
-  setReplyList,
   setHasMoreList
 } from "../store/actionCreators";
 import { Comment } from "@icon-park/react";
