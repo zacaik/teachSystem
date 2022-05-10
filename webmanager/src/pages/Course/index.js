@@ -222,8 +222,8 @@ const Course = memo(() => {
         title="编辑课程"
         visible={isEditModalVisible}
         footer={[
-          <Button onClick={() => handleCancel(2)}>取消</Button>,
-          <Button onClick={() => handleOk(2)} type="primary">
+          <Button onClick={() => handleCancel(2)} key="cancel">取消</Button>,
+          <Button onClick={() => handleOk(2)} type="primary" key="ok">
             确定
           </Button>,
         ]}

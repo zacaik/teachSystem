@@ -157,8 +157,8 @@ const Student = (props) => {
         visible={isDeleteModalVisible}
         onCancel={handleDeletCancel}
         footer={[
-          <Button onClick={handleDeletCancel}>取消</Button>,
-          <Button onClick={handleDeletOk} type="primary">
+          <Button onClick={handleDeletCancel} key="cancel">取消</Button>,
+          <Button onClick={handleDeletOk} type="primary" key="ok">
             确定
           </Button>,
         ]}
@@ -171,8 +171,8 @@ const Student = (props) => {
         visible={isAddModalVisible}
         onCancel={handleAddCancel}
         footer={[
-          <Button onClick={handleAddCancel}>取消</Button>,
-          <Button onClick={handleAddOk} type="primary">
+          <Button onClick={handleAddCancel} key="cancel">取消</Button>,
+          <Button onClick={handleAddOk} type="primary" key="ok">
             确定
           </Button>,
         ]}
