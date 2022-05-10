@@ -59,15 +59,6 @@ const Course = memo(() => {
     },
   ];
 
-  const formItemLayout = {
-    labelCol: {
-      span: 4,
-    },
-    wrapperCol: {
-      span: 20,
-    },
-  };
-
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
