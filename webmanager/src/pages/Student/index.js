@@ -22,7 +22,6 @@ const Student = (props) => {
     {
       title: "姓名",
       dataIndex: "name",
-      render: (text) => <a onClick={(e) => e.defaultPrevented()}>{text}</a>,
     },
     {
       title: "性别",
@@ -87,7 +86,7 @@ const Student = (props) => {
 
   const handleDeletOk = () => {
     request(`scweb/subscriber/deleteBatch?classId=${currentClass}`, {
-      data: { idList: [curStudent.id] },
+      data: [curStudent.id],
       method: "POST",
     }).then((res) => {
       console.log(res);
@@ -149,6 +148,7 @@ const Student = (props) => {
             columns={columns}
             dataSource={studentList}
             pagination={{ pageSize: 10 }}
+            rowKey={(record) => record.id}
           />
         </div>
       </div>

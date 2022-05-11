@@ -20,3 +20,7 @@ html body #root .App {
   padding: 10px 0 10px 20px!important;
   height: 100%;
 }
+
+.checkContent .ant-progress-text {
+  font-size: 25px!important;
+}
