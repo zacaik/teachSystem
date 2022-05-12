@@ -66,7 +66,6 @@ const Student = (props) => {
       ),
     },
   ];
-
   const navigate = useNavigate();
   const request = useHttp();
   const [form] = Form.useForm();

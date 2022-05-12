@@ -4,6 +4,8 @@ import {
   DesktopOutlined,
   PieChartOutlined,
   TeamOutlined,
+  BulbOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import { ManageWrapper } from "./style";
 import { Link, Routes, Route } from "react-router-dom";
@@ -13,6 +15,8 @@ import Course from "../Course";
 import Student from "../Student";
 import ClassInteraction from "../ClassInteraction";
 import StudentDetail from "../Student/details";
+import ClassTest from '../ClassTest';
+import ClassTestDetails from '../ClassTest/ClassTestDetails';
 
 const { Header, Content, Footer, Sider } = Layout;
 // const { SubMenu } = Menu;
@@ -56,8 +60,11 @@ export default function AuthPage(props) {
             <Menu.Item key="3" icon={<TeamOutlined />}>
               <Link to="/student">学生管理</Link>
             </Menu.Item>
-            <Menu.Item key="4" icon={<TeamOutlined />}>
+            <Menu.Item key="4" icon={<BulbOutlined />}>
               <Link to="/classInteraction">课堂互动</Link>
+            </Menu.Item>
+            <Menu.Item key="5" icon={<EditOutlined />}>
+              <Link to="/classTest">课堂测验</Link>
             </Menu.Item>
           </Menu>
         </Sider>
@@ -85,6 +92,16 @@ export default function AuthPage(props) {
               <Route
                 path="/classInteraction"
                 element={<ClassInteraction currentClass={currentClass} />}
+              />
+              <Route
+                path="/classTest"
+                element={<ClassTest currentClass={currentClass} />}
+                exact
+              />
+              <Route
+                path="/classTest/detail/:id"
+                element={<ClassTestDetails currentClass={currentClass} />}
+                exact
               />
             </Routes>
           </Content>

@@ -335,12 +335,9 @@ const Course = memo(() => {
         title="删除课程"
         visible={isDeleteModalVisible}
         onCancel={() => handleCancel(3)}
-        footer={[
-          <Button onClick={() => handleCancel(3)}>取消</Button>,
-          <Button onClick={() => handleOk(3)} type="primary">
-            确定
-          </Button>,
-        ]}
+        onOk={() => handleOk(3)}
+        okText="确定"
+        cancelText="取消"
       >
         <p>你确定要删除{curClass.name}吗？</p>
       </Modal>
