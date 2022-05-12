@@ -132,6 +132,7 @@ const Course = memo(() => {
   const showModal = (type, record) => {
     switch (type) {
       case 1:
+        setCurClass({});
         setIsAddModalVisible(true);
         break;
       case 2:
@@ -193,6 +194,106 @@ const Course = memo(() => {
     }
   };
 
+  const renderForm = (form, initialValues) => {
+    return (
+      <Form form={form} initialValues={initialValues}>
+        <Form.Item name="name" label="课程名称">
+          <Input />
+        </Form.Item>
+        <Form.Item name="startWeek" label="开课时间">
+          <InputNumber min={1} max={22} addonBefore="第" addonAfter="周" />
+        </Form.Item>
+        <Form.Item name="endWeek" label="结课时间">
+          <InputNumber min={1} max={22} addonBefore="第" addonAfter="周" />
+        </Form.Item>
+        <Form.Item name="address" label="上课地点">
+          <Input />
+        </Form.Item>
+        <>
+          上课时间：
+          {curClassTimeList.map(({ id }) => {
+            const curItem = curClassTimeList.find((item) => item.id === id);
+            return (
+              <Space
+                key={id}
+                style={{ display: "flex", marginBottom: 8 }}
+                align="baseline"
+              >
+                <InputNumber
+                  min={1}
+                  max={22}
+                  addonBefore="星期"
+                  value={curItem.weekDay}
+                  onChange={(value) => {
+                    console.log(value);
+                    const newClassTimeList = [...curClassTimeList];
+                    newClassTimeList.forEach((item) => {
+                      if (item.id === curItem.id) {
+                        item.weekDay = value;
+                      }
+                    });
+                    setCurClassTimeList(newClassTimeList);
+                  }}
+                />
+                <TimePicker.RangePicker
+                  onChange={(value) => {
+                    const startTime = value[0].format("HH:mm");
+                    const endTime = value[1].format("HH:mm");
+                    const newClassTimeList = [...curClassTimeList];
+                    newClassTimeList.forEach((item) => {
+                      if (item.id === curItem.id) {
+                        item.startTime = startTime;
+                        item.endTime = endTime;
+                      }
+                    });
+                    setCurClassTimeList(newClassTimeList);
+                    const newClassTimeMoment = { ...classTimeMoment };
+                    newClassTimeMoment[curItem.id] = value;
+                    setClassTimeMoment(newClassTimeMoment);
+                  }}
+                  defaultValue={[
+                    moment(curItem.startTime, "HH:mm"),
+                    moment(curItem.endTime, "HH:mm"),
+                  ]}
+                  format={"HH:mm"}
+                />
+                <MinusCircleOutlined
+                  onClick={() => {
+                    const newClassTimeList = curClassTimeList.filter((item) => {
+                      return item.id !== id;
+                    });
+                    setCurClassTimeList(newClassTimeList);
+                  }}
+                />
+              </Space>
+            );
+          })}
+          <Form.Item>
+            <Button
+              type="dashed"
+              onClick={() => {
+                setCurClassTimeList([
+                  ...curClassTimeList,
+                  {
+                    id: Math.random(),
+                    classId: curClass.id,
+                    startTime: "00:00",
+                    endTime: "00:00",
+                    weekDay: 1,
+                  },
+                ]);
+              }}
+              block
+              icon={<PlusOutlined />}
+            >
+              新增上课时间
+            </Button>
+          </Form.Item>
+        </>
+      </Form>
+    );
+  };
+
   return (
     <CourseWrapper>
       <div className="actionWrapper">
@@ -213,75 +314,12 @@ const Course = memo(() => {
       <Modal
         title="新增课程"
         visible={isAddModalVisible}
-        footer={[
-          <Button onClick={() => handleCancel(1)}>取消</Button>,
-          <Button onClick={() => handleOk(1)} type="primary">
-            确定
-          </Button>,
-        ]}
+        onCancel={() => handleCancel(1)}
+        onOk={() => handleOk(1)}
+        okText="确定"
+        cancelText="取消"
       >
-        <Form form={addForm}>
-          <Form.Item
-            name="name"
-            label="课程名称"
-            rules={[
-              {
-                required: true,
-                message: "请输入课程名称",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          {/* <Form.Item
-            name="startTime"
-            label="上课时间"
-            rules={[
-              {
-                required: true,
-                message: "请输入课程名称",
-              },
-            ]}
-          >
-            <InputNumber min={1} max={22} addonBefore="第" addonAfter="周" />
-          </Form.Item> */}
-          <Form.Item
-            name="startWeek"
-            label="开课时间"
-            rules={[
-              {
-                required: true,
-                message: "请输入开课时间",
-              },
-            ]}
-          >
-            <InputNumber min={1} max={22} addonBefore="第" addonAfter="周" />
-          </Form.Item>
-          <Form.Item
-            name="endWeek"
-            label="结课时间"
-            rules={[
-              {
-                required: true,
-                message: "请输入结课时间",
-              },
-            ]}
-          >
-            <InputNumber min={1} max={22} addonBefore="第" addonAfter="周" />
-          </Form.Item>
-          <Form.Item
-            name="address"
-            label="上课地点"
-            rules={[
-              {
-                required: true,
-                message: "请输入上课地点",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
+        {renderForm(addForm, curClass)}
       </Modal>
       <Modal
         title="编辑课程"
@@ -291,103 +329,7 @@ const Course = memo(() => {
         okText="确定"
         cancelText="取消"
       >
-        <Form form={editForm} initialValues={curClass}>
-          <Form.Item name="name" label="课程名称">
-            <Input />
-          </Form.Item>
-          <Form.Item name="startWeek" label="开课时间">
-            <InputNumber min={1} max={22} addonBefore="第" addonAfter="周" />
-          </Form.Item>
-          <Form.Item name="endWeek" label="结课时间">
-            <InputNumber min={1} max={22} addonBefore="第" addonAfter="周" />
-          </Form.Item>
-          <Form.Item name="address" label="上课地点">
-            <Input />
-          </Form.Item>
-          <>
-            上课时间：
-            {curClassTimeList.map(({ id }) => {
-              const curItem = curClassTimeList.find((item) => item.id === id);
-              return (
-                <Space
-                  key={id}
-                  style={{ display: "flex", marginBottom: 8 }}
-                  align="baseline"
-                >
-                  <InputNumber
-                    min={1}
-                    max={22}
-                    addonBefore="星期"
-                    value={curItem.weekDay}
-                    onChange={(value) => {
-                      console.log(value);
-                      const newClassTimeList = [...curClassTimeList];
-                      newClassTimeList.forEach((item) => {
-                        if (item.id === curItem.id) {
-                          item.weekDay = value;
-                        }
-                      });
-                      setCurClassTimeList(newClassTimeList);
-                    }}
-                  />
-                  <TimePicker.RangePicker
-                    onChange={(value) => {
-                      const startTime = value[0].format("HH:mm");
-                      const endTime = value[1].format("HH:mm");
-                      const newClassTimeList = [...curClassTimeList];
-                      newClassTimeList.forEach((item) => {
-                        if (item.id === curItem.id) {
-                          item.startTime = startTime;
-                          item.endTime = endTime;
-                        }
-                      });
-                      setCurClassTimeList(newClassTimeList);
-                      const newClassTimeMoment = { ...classTimeMoment };
-                      newClassTimeMoment[curItem.id] = value;
-                      setClassTimeMoment(newClassTimeMoment);
-                    }}
-                    defaultValue={[
-                      moment(curItem.startTime, "HH:mm"),
-                      moment(curItem.endTime, "HH:mm"),
-                    ]}
-                    format={"HH:mm"}
-                  />
-                  <MinusCircleOutlined
-                    onClick={() => {
-                      const newClassTimeList = curClassTimeList.filter(
-                        (item) => {
-                          return item.id !== id;
-                        }
-                      );
-                      setCurClassTimeList(newClassTimeList);
-                    }}
-                  />
-                </Space>
-              );
-            })}
-            <Form.Item>
-              <Button
-                type="dashed"
-                onClick={() => {
-                  setCurClassTimeList([
-                    ...curClassTimeList,
-                    {
-                      id: 3,
-                      classId: 1,
-                      startTime: "00:00",
-                      endTime: "00:00",
-                      weekDay: 0,
-                    },
-                  ]);
-                }}
-                block
-                icon={<PlusOutlined />}
-              >
-                Add field
-              </Button>
-            </Form.Item>
-          </>
-        </Form>
+        {renderForm(editForm, curClass)}
       </Modal>
       <Modal
         title="删除课程"
@@ -458,8 +400,6 @@ const Course = memo(() => {
 
   async function handleEditCourse() {
     const value = editForm.getFieldsValue(true);
-    console.log(curClassTimeList);
-    console.log(value);
     const originClassTimeList = curClass?.schoolClassTimeList;
     const originIdList = originClassTimeList.map((item) => item.id);
     const curIdList = curClassTimeList.map((item) => item.id);
@@ -472,40 +412,40 @@ const Course = memo(() => {
     const editList = curClassTimeList.filter((item) => {
       return originIdList.includes(item.id);
     });
-    console.log(addList);
-    console.log(editList);
-    console.log(delList);
-    // return;
     try {
       await request(`scweb/class`, {
         method: "PUT",
-        data: { ...value, schoolClassTimeList: editList },
+        data: _.pick({ ...value, schoolClassTimeList: editList }, [
+          "id",
+          "teacherId",
+          "teacherName",
+          "name",
+          "startWeek",
+          "endWeek",
+          "address",
+          "schoolClassTimeList",
+        ]),
         isBody: true,
       });
-      // editList.map(async (item) => {
-      //   await request(`scweb/schoolClassTime`, {
+      addList.map(async (item) => {
+        await request(`scweb/schoolClassTime`, {
+          method: "POST",
+          data: _.omit(item, ["id"]),
+        });
+      });
+      // addList.length > 0 &&
+      //   (await request(`scweb/schoolClassTime`, {
       //     method: "PUT",
-      //     data: { ...value, schoolClassTimeList: [_.omit(item, ["id"])] },
+      //     data: _.omit({ ...value, schoolClassTimeList: editList }, attrArr),
       //     isBody: true,
-      //   });
-      // });
-      editList.length > 0 &&
-        (await request(`scweb/schoolClassTime`, {
-          method: "PUT",
-          data: { ...value, schoolClassTimeList: editList },
-          isBody: true,
-        }));
-      addList.length > 0 &&
-        (await request(`scweb/schoolClassTime`, {
-          method: "PUT",
-          data: { ...value, schoolClassTimeList: addList },
-          isBody: true,
-        }));
+      //   }));
       delList.length > 0 &&
         (await request(`scweb/schoolClassTime/deleteBatch`, {
           method: "POST",
           data: delList,
         }));
+      message.success("更新成功");
+      getData();
     } catch (err) {
       message.error(err);
     }
@@ -518,7 +458,9 @@ const Course = memo(() => {
         ...value,
         teacherId: user.id,
         teacherName: user.name,
-        startTime: 14,
+        schoolClassTimeList: curClassTimeList.map((item) =>
+          _.omit(item, ["id", "classId"])
+        ),
       },
       method: "POST",
     })

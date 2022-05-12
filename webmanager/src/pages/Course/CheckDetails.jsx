@@ -64,16 +64,13 @@ const CheckDetails = memo((props) => {
   const [curCheck, setCurCheck] = useState(null);
 
   useEffect(() => {
-    getCheckList();
+    curClass?.id && getCheckList();
   }, [curClass?.id]);
 
   useEffect(() => {
     setCurCheck(checkList[0]?.id);
   }, [checkList]);
 
-  const showDrawer = () => {
-    setVisible(true);
-  };
   const onClose = () => {
     setVisible(false);
   };
