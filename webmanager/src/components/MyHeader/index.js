@@ -40,7 +40,7 @@ export default function MyHeader(props) {
       <div className="right">
         <div className="user">
           {/* <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }} className="avatar">凡</Avatar> */}
-          <p className="userName">欢迎您，{user.name}老师</p>
+          <p className="userName">欢迎您，{user.name}</p>
           <Button className="logout" onClick={handleLogOut} type="primary">退出</Button>
         </div>
       </div>
@@ -53,6 +53,6 @@ export default function MyHeader(props) {
 
   function handleLogOut() {
     localStorage.removeItem("__auth-provider-token__");
-    window.Arraylocation.reload();
+    window.location.reload();
   }
 };

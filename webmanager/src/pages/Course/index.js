@@ -424,18 +424,11 @@ const Course = memo(() => {
         ]),
         isBody: true,
       });
-      addList.map(async (item) => {
-        await request(`scweb/schoolClassTime`, {
+      addList.length > 0 &&
+        (await request(`scweb/schoolClassTime/addBatch`, {
           method: "POST",
-          data: _.omit(item, ["id"]),
-        });
-      });
-      // addList.length > 0 &&
-      //   (await request(`scweb/schoolClassTime`, {
-      //     method: "PUT",
-      //     data: _.omit({ ...value, schoolClassTimeList: editList }, attrArr),
-      //     isBody: true,
-      //   }));
+          data: addList,
+        }));
       delList.length > 0 &&
         (await request(`scweb/schoolClassTime/deleteBatch`, {
           method: "POST",

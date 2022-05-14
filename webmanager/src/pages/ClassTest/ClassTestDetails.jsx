@@ -1,10 +1,13 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Table, Tag, Button, Modal, Select, Input } from "antd";
 import { Column } from "@ant-design/plots";
+import { useHttp } from "../../utils/http";
+import { useLocation } from "react-router-dom";
 
-const ClassTestDetails = memo(() => {
+const ClassTestDetails = memo((props) => {
+  const { currentClass } = props;
   const columns = [
-    { title: "题目描述", dataIndex: "questionContent" },
+    { title: "题目描述", dataIndex: "title" },
     {
       title: "题目类型",
       dataIndex: "type",
@@ -21,177 +24,24 @@ const ClassTestDetails = memo(() => {
     { title: "正确答案", dataIndex: "rightAnswer" },
     {
       title: "选项",
-      dataIndex: "selection",
+      dataIndex: "optionList",
       render: (text, record) => {
-        return text?.map((item) => <div>{item}</div>);
+        console.log(text);
+        return text?.map((item) => <div>{item.content}</div>);
       },
-    },
-    {
-      title: "操作",
-      render: () => (
-        <>
-          <Button
-            type="primary"
-            className="btn"
-            style={{ marginRight: 10 }}
-            // onClick={() => showModal(2, record)}
-          >
-            修改
-          </Button>
-          <Button
-            type="danger"
-            className="btn"
-            // onClick={() => showModal(2, record)}
-          >
-            删除
-          </Button>
-        </>
-      ),
-    },
-  ];
-
-  const data = [
-    {
-      key: 1,
-      questionContent: "以下技术栈中，不属于前端范畴的是",
-      type: 0,
-      rightAnswer: "A",
-      selection: ["A: java", "B: javascript", "C: Node.js", "D: webpack"],
-    },
-    {
-      key: 1,
-      questionContent: "以下技术栈中，不属于前端范畴的是",
-      type: 0,
-      rightAnswer: "A",
-      selection: ["A: java", "B: javascript", "C: Node.js", "D: webpack"],
-    },
-    {
-      key: 1,
-      questionContent: "以下技术栈中，不属于前端范畴的是",
-      type: 0,
-      rightAnswer: "A",
-      selection: ["A: java", "B: javascript", "C: Node.js", "D: webpack"],
-    },
-    {
-      key: 1,
-      questionContent: "以下技术栈中，不属于前端范畴的是",
-      type: 0,
-      rightAnswer: "A",
-      selection: ["A: java", "B: javascript", "C: Node.js", "D: webpack"],
-    },
-    {
-      key: 1,
-      questionContent: "以下技术栈中，不属于前端范畴的是",
-      type: 0,
-      rightAnswer: "A",
-      selection: ["A: java", "B: javascript", "C: Node.js", "D: webpack"],
-    },
-    {
-      key: 1,
-      questionContent: "以下技术栈中，不属于前端范畴的是",
-      type: 0,
-      rightAnswer: "A",
-      selection: ["A: java", "B: javascript", "C: Node.js", "D: webpack"],
-    },
-    {
-      key: 1,
-      questionContent: "以下技术栈中，不属于前端范畴的是",
-      type: 0,
-      rightAnswer: "A",
-      selection: ["A: java", "B: javascript", "C: Node.js", "D: webpack"],
-    },
-    {
-      key: 2,
-      questionContent: "POST请求方式是一种安全的HTTP请求方式",
-      type: 2,
-      rightAnswer: "true",
-      // selection: ['A: java', 'B: javascript', 'C: Node.js', "D: webpack"],
     },
   ];
 
   const studentColumns = [
-    { title: "学生姓名", dataIndex: "name" },
+    { title: "学生姓名", dataIndex: "studentName" },
     {
       title: "班级",
       dataIndex: "class",
     },
-    { title: "学号", dataIndex: "id" },
+    { title: "学号", dataIndex: "jobId" },
     {
       title: "分数",
       dataIndex: "score",
-    },
-  ];
-
-  const studentData = [
-    {
-      key: 1,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
-    },
-    {
-      key: 2,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
-    },
-    {
-      key: 3,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
-    },
-    {
-      key: 3,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
-    },
-    {
-      key: 3,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
-    },
-    {
-      key: 3,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
-    },
-    {
-      key: 3,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
-    },
-    {
-      key: 3,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
-    },
-    {
-      key: 3,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
-    },
-    {
-      key: 3,
-      name: "李俊燃",
-      class: "计算机二班",
-      id: "1806010228",
-      score: 100,
     },
   ];
 
@@ -236,34 +86,51 @@ const ClassTestDetails = memo(() => {
   const { Option } = Select;
   const { Search } = Input;
 
+  const request = useHttp();
+  let location = useLocation();
+
+  const [testList, setTestList] = useState([]);
+  const [curTest, setCurTest] = useState("");
+  const [curTestQuestion, setCurTestQuestion] = useState([]);
+  const [curTestRes, setCurTestRes] = useState([]);
+
+  useEffect(() => {
+    getTestList();
+  }, [currentClass]);
+
+  useEffect(() => {
+    curTest && getTestContent();
+  }, [curTest]);
+
+  useEffect(() => {
+    setCurTest(location.state.id);
+  }, []);
+
   return (
     <div>
       <div className="testTable">
-        <div className="actionHeader">
+        <div className="actionHeader" style={{ margin: 10 }}>
           选择当前测验：
-          <Select style={{ width: 300 }}></Select>
-          <Button
-            type="primary"
-            style={{ margin: "10px" }}
-            // onClick={() => showModal(1)}
+          <Select
+            style={{ width: 300 }}
+            value={curTest}
+            onChange={(value) => {
+              setCurTest(value);
+            }}
           >
-            新增题目
-          </Button>
-          <Button
-            type="primary"
-            style={{ margin: "10px" }}
-            // onClick={() => showModal(1)}
-          >
-            发布试卷
-          </Button>
+            {testList.map((item) => {
+              return <Option value={item.id}>{item.name}</Option>;
+            })}
+          </Select>
         </div>
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={curTestQuestion}
           style={{ marginTop: 5, marginBottom: 50 }}
           scroll={{ y: 600 }}
           pagination={false}
           title={() => "试卷题目"}
+          rowKey={(record) => record.id}
         />
       </div>
       <div
@@ -299,15 +166,59 @@ const ClassTestDetails = memo(() => {
           />
           <Table
             columns={studentColumns}
-            dataSource={studentData}
+            dataSource={curTestRes}
             // style={{ marginTop: 50 }}
             pagination={{ pageSize: 10 }}
+            rowKey={(record) => record.id}
             // title={() => "学生成绩列表"}
           />
         </div>
       </div>
     </div>
   );
+
+  function getTestList() {
+    request("scweb/schoolClassTest", {
+      data: { classId: currentClass },
+    }).then((res) => setTestList(res.data));
+  }
+
+  function getTestContent() {
+    request(`scweb/schoolClassTest/${curTest}`).then((res) => {
+      const data = [];
+      res.data.examPaperVO.jsonContent.multipleQuestionList.forEach((item) => {
+        // data.push({ ...item, type: 1 });
+        handleTestItemData(item, data, 1);
+      });
+      res.data.examPaperVO.jsonContent.trueOrFalseQuestionList.forEach(
+        (item) => {
+          handleTestItemData(item, data, 2);
+        }
+      );
+      res.data.examPaperVO.jsonContent.singleQuestionList.forEach((item) => {
+        handleTestItemData(item, data, 3);
+      });
+      console.log(data);
+      setCurTestQuestion(data);
+      setCurTestRes(res.data.testReportVOList);
+    });
+  }
+
+  function handleTestItemData(item, data, type) {
+    let rightAnswer = null;
+    item.optionList.forEach((item) => {
+      if (item.right === 1) {
+        rightAnswer = item.content;
+      }
+    });
+    data.push({
+      title: item.testItem.title,
+      optionList: item.optionList,
+      id: item.testItem.id,
+      type,
+      rightAnswer,
+    });
+  }
 });
 
 export default ClassTestDetails;

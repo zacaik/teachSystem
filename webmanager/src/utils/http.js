@@ -1,7 +1,6 @@
 import qs from "qs";
 import { baseUrl } from "../consts";
 import { useCallback } from "react";
-import { useSelector, shallowEqual } from "react-redux";
 
 export const http = async (
   url,
@@ -44,17 +43,11 @@ export const http = async (
 };
 
 export const useHttp = () => {
-  const { user } = useSelector(
-    (state) => ({
-      user: state.user.user,
-    }),
-    shallowEqual
-  );
-  console.log(user);
+  const token = localStorage.getItem("__auth-provider-token__");
   return useCallback(
     (url, config) => {
-      return http(url, { ...config, token: user.token });
+      return http(url, { ...config, token });
     },
-    [user.token]
+    [token]
   );
 };
