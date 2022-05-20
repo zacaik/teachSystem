@@ -47,7 +47,7 @@ const Student = (props) => {
           <Button
             type="primary"
             className="btn"
-            onClick={() => navigate("./detail/1", { state: record })}
+            onClick={() => navigate(`./detail/${record.id}`, { state: record })}
           >
             查看学生详情
           </Button>

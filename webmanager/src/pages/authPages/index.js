@@ -88,7 +88,7 @@ export default function AuthPage(props) {
                 element={<Student currentClass={currentClass} />}
                 exact
               />
-              <Route path="/student/detail/:id" element={<StudentDetail />} />
+              <Route path="/student/detail/:id" element={<StudentDetail currentClass={currentClass} />} />
               <Route
                 path="/classInteraction"
                 element={<ClassInteraction currentClass={currentClass} />}

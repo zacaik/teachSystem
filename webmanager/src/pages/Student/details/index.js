@@ -1,28 +1,37 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { DetailWrapper } from "./style";
-import { Descriptions, Card, Table, Tag } from "antd";
+import { Descriptions, Card, message, Tag } from "antd";
 import { Pie, Line, Column } from "@ant-design/plots";
+import { useHttp } from "../../../utils/http";
 
-const StudentDetail = memo(() => {
+const StudentDetail = memo((props) => {
+  const { currentClass } = props;
   let location = useLocation();
-  let data = location.state;
-  console.log(data);
+  let student = location.state;
+  const request = useHttp();
+  const [studentDetail, setStudentDetail] = useState(null);
 
-  const pieData = [
-    {
-      type: "签到",
-      value: 91,
-    },
-    {
-      type: "未签到",
-      value: 9,
-    },
-  ];
+  useEffect(() => {
+    request("scweb/student/single", {
+      data: {
+        classId: currentClass,
+        id: student.id,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setStudentDetail(res.data);
+      })
+      .catch((err) => {
+        message.error(err);
+      });
+  }, []);
+
   const pieConfig = {
     appendPadding: 0,
     padding: [0, 100, 0, 0],
-    data: pieData,
+    data: handleCheckPercent(),
     angleField: "value",
     colorField: "type",
     radius: 0.9,
@@ -42,38 +51,8 @@ const StudentDetail = memo(() => {
     ],
   };
 
-  const lineData = [
-    {
-      index: "第一章",
-      得分: 100,
-    },
-    {
-      index: "第二章",
-      得分: 90,
-    },
-    {
-      index: "第三章",
-      得分: 60,
-    },
-    {
-      index: "第四章",
-      得分: 0,
-    },
-    {
-      index: "第五章",
-      得分: 70,
-    },
-    {
-      index: "第六章",
-      得分: 60,
-    },
-    {
-      index: "第七章",
-      得分: 100,
-    },
-  ];
   const lineConfig = {
-    data: lineData,
+    data: handleTestData(),
     xField: "index",
     yField: "得分",
     label: {},
@@ -105,82 +84,20 @@ const StudentDetail = memo(() => {
     ],
   };
 
-  const columnData = [
-    {
-      "上课时间": '3-1',
-      number: 6,
-      type: "回答的问题"
-    },
-    {
-      "上课时间": '3-7',
-      number: 6,
-      type: "回答的问题"
-    },
-    {
-      "上课时间": '3-15',
-      number: 6,
-      type: "回答的问题"
-    },
-    {
-      "上课时间": '3-21',
-      number: 6,
-      type: "回答的问题"
-    },
-    {
-      "上课时间": '3-28',
-      number: 6,
-      type: "回答的问题"
-    },
-    {
-      "上课时间": '4-5',
-      number: 6,
-      type: "回答的问题"
-    },
-    {
-      "上课时间": '3-1',
-      number: 1,
-      type: "没有回答的问题"
-    },
-    {
-      "上课时间": '3-7',
-      number: 1,
-      type: "没有回答的问题"
-    },
-    {
-      "上课时间": '3-15',
-      number: 1,
-      type: "没有回答的问题"
-    },
-    {
-      "上课时间": '3-21',
-      number: 1,
-      type: "没有回答的问题"
-    },
-    {
-      "上课时间": '3-28',
-      number: 1,
-      type: "没有回答的问题"
-    },
-    {
-      "上课时间": '4-5',
-      number: 1,
-      type: "没有回答的问题"
-    },
-  ];
   const columnConfig = {
-    data: columnData,
-    xField: '上课时间',
-    yField: 'number',
-    seriesField: 'type',
+    data: handleInteractionData(),
+    xField: "上课时间",
+    yField: "number",
+    seriesField: "type",
     isPercent: true,
     isStack: true,
     label: {
-      position: 'middle',
+      position: "middle",
       content: (item) => {
         return item.number.toFixed(2);
       },
       style: {
-        fill: '#fff',
+        fill: "#fff",
       },
     },
     scrollbar: {
@@ -192,12 +109,27 @@ const StudentDetail = memo(() => {
     <DetailWrapper>
       <Card title="学生基本信息" style={{ width: "100%", marginTop: "20px" }}>
         <Descriptions bordered>
-          <Descriptions.Item label="姓名">李俊燃</Descriptions.Item>
-          <Descriptions.Item label="性别">男</Descriptions.Item>
-          <Descriptions.Item label="年龄">21</Descriptions.Item>
-          <Descriptions.Item label="学号">1806010228</Descriptions.Item>
-          <Descriptions.Item label="openId">84523</Descriptions.Item>
-          <Descriptions.Item label="班级">18级计算机二班</Descriptions.Item>
+          <Descriptions.Item label="姓名">
+            {studentDetail?.student.name}
+          </Descriptions.Item>
+          <Descriptions.Item label="性别">
+            {studentDetail?.student.sex == 0 ? "男" : "女"}
+          </Descriptions.Item>
+          <Descriptions.Item label="学号">
+            {studentDetail?.student.jobId}
+          </Descriptions.Item>
+          <Descriptions.Item label="openId">
+            {studentDetail?.student.openId}
+          </Descriptions.Item>
+          <Descriptions.Item label="班级">
+            {studentDetail?.student.belongClass}
+          </Descriptions.Item>
+          <Descriptions.Item label="年级">
+            {studentDetail?.student.grade}
+          </Descriptions.Item>
+          <Descriptions.Item label="邮箱">
+            {studentDetail?.student.email}
+          </Descriptions.Item>
         </Descriptions>
       </Card>
       <Card
@@ -215,24 +147,22 @@ const StudentDetail = memo(() => {
           }}
         >
           <Descriptions bordered style={{ width: "60%" }} column={5}>
-            <Descriptions.Item label="3-1">
-              <Tag color="green">出勤</Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="3-8">
-              <Tag color="green">出勤</Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="3-15">
-              <Tag color="red">缺课</Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="3-21">
-              <Tag color="green">出勤</Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="3-28">
-              <Tag color="green">出勤</Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="4-5">
-              <Tag color="red">缺课</Tag>
-            </Descriptions.Item>
+            {studentDetail?.checkInResultMap &&
+              Object.keys(studentDetail?.checkInResultMap).map((item) => {
+                return (
+                  <Descriptions.Item label={item} key={item}>
+                    <Tag
+                      color={
+                        studentDetail?.checkInResultMap[item] === "出勤"
+                          ? "green"
+                          : "red"
+                      }
+                    >
+                      {studentDetail?.checkInResultMap[item]}
+                    </Tag>
+                  </Descriptions.Item>
+                );
+              })}
           </Descriptions>
           <div className="pieWrapper" style={{ width: 300, height: 200 }}>
             <Pie {...pieConfig} />
@@ -243,13 +173,78 @@ const StudentDetail = memo(() => {
         title="学生课堂表现统计"
         style={{ width: "100%", marginTop: "20px" }}
       >
-        <h3 style={{ marginBottom: "20px"}}>知识测验成绩</h3>
+        <h3 style={{ marginBottom: "20px" }}>知识测验成绩</h3>
         <Line {...lineConfig} />
-        <h3 style={{ marginBottom: "20px", marginTop: "50px"}}>课堂互动情况</h3>
+        <h3 style={{ marginBottom: "20px", marginTop: "50px" }}>
+          课堂互动情况
+        </h3>
         <Column {...columnConfig} />
       </Card>
     </DetailWrapper>
   );
+
+  function handleCheckPercent() {
+    console.log(studentDetail?.checkInResultMap);
+    if (studentDetail) {
+      const checkArr = Object.keys(studentDetail?.checkInResultMap);
+      let checked = 0;
+      checkArr.forEach((item) => {
+        if (studentDetail?.checkInResultMap[item] === "出勤") {
+          checked++;
+        }
+      });
+      return [
+        {
+          type: "出勤",
+          value: (checked / checkArr.length).toFixed(2) * 100,
+        },
+        {
+          type: "缺勤",
+          value: (1 - checked / checkArr.length).toFixed(2) * 100,
+        },
+      ];
+    } else {
+      return [];
+    }
+  }
+
+  function handleTestData() {
+    if (studentDetail) {
+      return studentDetail.testReportVOList.map((item) => {
+        return {
+          index: item.category.name,
+          得分: item.score,
+        };
+      });
+    } else {
+      return [];
+    }
+  }
+
+  function handleInteractionData() {
+    if (studentDetail) {
+      const interactionArr = Object.keys(studentDetail.interactionStatisticMap);
+      const already = interactionArr.map((item) => {
+        return {
+          上课时间: item,
+          number: studentDetail.interactionStatisticMap[item].actualCount,
+          type: "回答的问题",
+        };
+      });
+      const miss = interactionArr.map((item) => {
+        return {
+          上课时间: item,
+          number:
+            studentDetail.interactionStatisticMap[item].shouldCount -
+            studentDetail.interactionStatisticMap[item].actualCount,
+          type: "没有回答的问题",
+        };
+      });
+      return [...already, ...miss];
+    } else {
+      return [];
+    }
+  }
 });
 
 export default StudentDetail;
