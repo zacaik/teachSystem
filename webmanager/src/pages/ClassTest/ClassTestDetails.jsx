@@ -11,8 +11,10 @@ const ClassTestDetails = memo((props) => {
     {
       title: "题目类型",
       dataIndex: "type",
-      render: (text) => {
-        if (text === 0) {
+      render: (text, record) => {
+        console.log(text);
+        console.log(record);
+        if (text === 3) {
           return <Tag color="green">单选题</Tag>;
         } else if (text === 1) {
           return <Tag color="blue">多选题</Tag>;
@@ -45,32 +47,17 @@ const ClassTestDetails = memo((props) => {
     },
   ];
 
-  const testData = [
-    {
-      score: "20分以下",
-      人数: 10,
-    },
-    {
-      score: "20-40分",
-      人数: 30,
-    },
-    {
-      score: "40-60分",
-      人数: 25,
-    },
-    {
-      score: "60-80分",
-      人数: 67,
-    },
-    {
-      score: "80-90分",
-      人数: 31,
-    },
-    {
-      score: "90分以上",
-      人数: 12,
-    },
-  ];
+  const { Option } = Select;
+  const { Search } = Input;
+
+  const request = useHttp();
+  let location = useLocation();
+
+  const [testList, setTestList] = useState([]);
+  const [curTest, setCurTest] = useState("");
+  const [curTestQuestion, setCurTestQuestion] = useState([]);
+  const [curTestRes, setCurTestRes] = useState([]);
+  const [testData, setTestData] = useState([]);
 
   const testConfig = {
     data: testData,
@@ -82,17 +69,6 @@ const ClassTestDetails = memo((props) => {
       },
     },
   };
-
-  const { Option } = Select;
-  const { Search } = Input;
-
-  const request = useHttp();
-  let location = useLocation();
-
-  const [testList, setTestList] = useState([]);
-  const [curTest, setCurTest] = useState("");
-  const [curTestQuestion, setCurTestQuestion] = useState([]);
-  const [curTestRes, setCurTestRes] = useState([]);
 
   useEffect(() => {
     getTestList();
@@ -167,10 +143,8 @@ const ClassTestDetails = memo((props) => {
           <Table
             columns={studentColumns}
             dataSource={curTestRes}
-            // style={{ marginTop: 50 }}
             pagination={{ pageSize: 10 }}
             rowKey={(record) => record.id}
-            // title={() => "学生成绩列表"}
           />
         </div>
       </div>
@@ -187,7 +161,6 @@ const ClassTestDetails = memo((props) => {
     request(`scweb/schoolClassTest/${curTest}`).then((res) => {
       const data = [];
       res.data.examPaperVO.jsonContent.multipleQuestionList.forEach((item) => {
-        // data.push({ ...item, type: 1 });
         handleTestItemData(item, data, 1);
       });
       res.data.examPaperVO.jsonContent.trueOrFalseQuestionList.forEach(
@@ -198,9 +171,9 @@ const ClassTestDetails = memo((props) => {
       res.data.examPaperVO.jsonContent.singleQuestionList.forEach((item) => {
         handleTestItemData(item, data, 3);
       });
-      console.log(data);
       setCurTestQuestion(data);
       setCurTestRes(res.data.testReportVOList);
+      setTestData(handleTestScore(res.data.scoreIntervalMap));
     });
   }
 
@@ -218,6 +191,35 @@ const ClassTestDetails = memo((props) => {
       type,
       rightAnswer,
     });
+  }
+
+  function handleTestScore(map) {
+    return [
+      {
+        score: "20分以下",
+        人数: map[0],
+      },
+      {
+        score: "20-40分",
+        人数: map[1],
+      },
+      {
+        score: "40-60分",
+        人数: map[2],
+      },
+      {
+        score: "60-80分",
+        人数: map[3],
+      },
+      {
+        score: "80-90分",
+        人数: map[4],
+      },
+      {
+        score: "90分以上",
+        人数: map[5],
+      },
+    ];
   }
 });
 

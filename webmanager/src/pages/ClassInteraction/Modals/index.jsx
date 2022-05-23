@@ -135,13 +135,11 @@ export default function Modals(props) {
       },
     })
       .then((res) => {
-        console.log(res);
         message.success("题目发布成功！");
         dispatch(hideStartModal());
         fetchInteractList();
       })
       .catch((err) => {
-        console.log(err);
         message.error(err);
       });
   }
@@ -159,14 +157,12 @@ export default function Modals(props) {
       },
     })
       .then((res) => {
-        console.log(res);
         message.success("互动已结束！");
         dispatch(hideStopModal());
         dispatch(setHasMoreList(false, currentQuestionItemId));
         fetchInteractList();
       })
       .catch((err) => {
-        console.log(err);
         message.error(err);
       });
   }
@@ -180,13 +176,11 @@ export default function Modals(props) {
       method: "DELETE",
     })
       .then((res) => {
-        console.log(res);
         openNotification();
         dispatch(hideDeleteModal());
         fetchInteractList();
       })
       .catch((err) => {
-        console.log(err);
         message.error(err);
       });
   }
@@ -214,7 +208,7 @@ export default function Modals(props) {
     });
   }
 
-  async function fetchInteractList(currentClass) {
+  async function fetchInteractList() {
     const interactList = await request("scweb/interaction", {
       data: { classId: currentClass || 1, sort: 1 },
     });

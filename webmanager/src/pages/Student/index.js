@@ -87,13 +87,15 @@ const Student = (props) => {
     request(`scweb/subscriber/deleteBatch?classId=${currentClass}`, {
       data: [curStudent.id],
       method: "POST",
-    }).then((res) => {
-      console.log(res);
-      message.success("移除成功");
-      fetchStudentList(currentClass);
-    }).catch((err) => {
-      message.error(err);
-    });
+    })
+      .then((res) => {
+        console.log(res);
+        message.success("移除成功");
+        fetchStudentList(currentClass);
+      })
+      .catch((err) => {
+        message.error(err);
+      });
     setIsDeleteModalVisible(false);
   };
 
@@ -105,13 +107,15 @@ const Student = (props) => {
     const id = form.getFieldsValue(true).id;
     request(`scweb/subscriber?studentJobId=${id}&classId=${currentClass}`, {
       method: "POST",
-    }).then((res) => {
-      console.log(res);
-      message.success("添加成功");
-      fetchStudentList(currentClass);
-    }).catch(() => {
-      message.error("添加失败，该学生不存在");
-    });
+    })
+      .then((res) => {
+        console.log(res);
+        message.success("添加成功");
+        fetchStudentList(currentClass);
+      })
+      .catch(() => {
+        message.error("添加失败，该学生不存在");
+      });
     setIsAddModalVisible(false);
   };
 
@@ -156,7 +160,9 @@ const Student = (props) => {
         visible={isDeleteModalVisible}
         onCancel={handleDeletCancel}
         footer={[
-          <Button onClick={handleDeletCancel} key="cancel">取消</Button>,
+          <Button onClick={handleDeletCancel} key="cancel">
+            取消
+          </Button>,
           <Button onClick={handleDeletOk} type="primary" key="ok">
             确定
           </Button>,
@@ -170,7 +176,9 @@ const Student = (props) => {
         visible={isAddModalVisible}
         onCancel={handleAddCancel}
         footer={[
-          <Button onClick={handleAddCancel} key="cancel">取消</Button>,
+          <Button onClick={handleAddCancel} key="cancel">
+            取消
+          </Button>,
           <Button onClick={handleAddOk} type="primary" key="ok">
             确定
           </Button>,
@@ -203,26 +211,30 @@ const Student = (props) => {
       fetchStudentList(currentClass);
       return;
     }
-    if (isNaN(Number(value))) {
-      const res = await request(`scweb/student/list`, {
-        data: { name: value },
-      });
-      if (res.data) {
-        setStudentList(res.data);
+    try {
+      if (isNaN(Number(value))) {
+        const res = await request(`scweb/student/list`, {
+          data: { name: value, classId: currentClass },
+        });
+        if (res.data) {
+          setStudentList(res.data);
+        } else {
+          setStudentList([]);
+        }
       } else {
-        setStudentList([]);
+        const res = await request(`scweb/student/single`, {
+          data: { jobId: value, classId: currentClass },
+        });
+        if (res.data) {
+          setStudentList([res.data.student]);
+        } else {
+          setStudentList([]);
+        }
       }
-    } else {
-      const res = await request(`scweb/student/single`, {
-        data: { jobId: value },
-      });
-      if (res.data) {
-        setStudentList(res.data);
-      } else {
-        setStudentList([]);
-      }
+      message.success("查询成功");
+    } catch (error) {
+      message.error(error);
     }
-    message.success("查询成功");
   }
 };
 

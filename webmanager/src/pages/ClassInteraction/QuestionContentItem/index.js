@@ -55,14 +55,6 @@ const QuestionContentItem = memo((props) => {
       );
     }
 
-    if (finish === 1) {
-      newActionList.push(
-        <div className="restart">
-          <Button type="primary">重新发布</Button>
-        </div>
-      );
-    }
-
     newActionList.push(
       <div className="deleteWrapper" onClick={handleDeleteQuestionItem}>
         <Tooltip title="删除">

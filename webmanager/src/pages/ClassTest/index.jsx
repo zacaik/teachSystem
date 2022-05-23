@@ -99,7 +99,7 @@ const ClassTest = memo((props) => {
 
   const uploadProps = {
     name: "file",
-    action: `http://124.221.127.152:6680/scweb/category/?classId=${currentClass}`,
+    action: `http://124.221.127.152:6680/scweb/schoolClassTest/import?classId=${currentClass}`,
     accept: ".xls,.xlsx",
     headers: {
       authorization: localStorage.getItem("__auth-provider-token__"),
@@ -211,6 +211,7 @@ const ClassTest = memo((props) => {
       .then(() => {
         message.success("发布成功");
         setIsModalVisible(false);
+        getCategory();
       })
       .catch((err) => {
         message.error(err);

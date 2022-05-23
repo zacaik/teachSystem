@@ -44,7 +44,7 @@ const ClassInteraction = memo((props) => {
         </div>
       </div>
       <div className="interactContent">
-        <QuestionContainer />
+        <QuestionContainer currentClass={currentClass}/>
         <ReplyContainer />
       </div>
       <Modals

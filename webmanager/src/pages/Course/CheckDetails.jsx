@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { Drawer, Button, Select, Tag, Statistic, Progress, Table } from "antd";
+import { Drawer, Select, Tag, Statistic, Progress, Table } from "antd";
 import { useHttp } from "../../utils/http";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const CheckDetails = memo((props) => {
     },
     {
       title: "班级",
-      dataIndex: "class",
+      dataIndex: "belongClass",
     },
     {
       title: "操作",
@@ -30,7 +30,7 @@ const CheckDetails = memo((props) => {
           <>
             <a
               className="btn"
-              onClick={() => navigate("../student/detail/1", { state: record })}
+              onClick={() => navigate(`../student/detail/${record.id}`, { state: record })}
             >
               查看学生详情
             </a>
@@ -39,29 +39,10 @@ const CheckDetails = memo((props) => {
       },
     },
   ];
-  const studentList = [
-    {
-      key: "1",
-      name: "John Brown",
-      id: 1806010228,
-      class: "计算机二班",
-    },
-    {
-      key: "1",
-      name: "John Brown",
-      id: 1806010222,
-      class: "计算机二班",
-    },
-    {
-      key: "1",
-      name: "John Brown",
-      id: 1806010224,
-      class: "计算机二班",
-    },
-  ];
 
   const [checkList, setCheckList] = useState([]);
   const [curCheck, setCurCheck] = useState(null);
+  const [checkDetail, setCheckDetail] = useState(null);
 
   useEffect(() => {
     curClass?.id && getCheckList();
@@ -70,6 +51,10 @@ const CheckDetails = memo((props) => {
   useEffect(() => {
     setCurCheck(checkList[0]?.id);
   }, [checkList]);
+
+  useEffect(() => {
+    curCheck && getCheckDetail();
+  }, [curCheck]);
 
   const onClose = () => {
     setVisible(false);
@@ -124,17 +109,12 @@ const CheckDetails = memo((props) => {
               justifyContent: "center",
             }}
           >
-            <Statistic
-              title="已签到人数"
-              value={112}
-              style={{ marginBottom: "20px" }}
-            />
-            <Statistic title="未签到人数" value={112} />
+            <Statistic title="未签到人数" value={checkDetail?.missingStudentList.length} />
           </div>
           <div className="checkProgress">
             <Progress
               type="circle"
-              percent={75}
+              percent={Number(checkDetail?.checkInPercentage.split(".")[0])}
               format={(percent) => `${percent}% 已签到`}
               width={200}
             />
@@ -145,7 +125,7 @@ const CheckDetails = memo((props) => {
             title={() => <h2>未签到学生列表</h2>}
             style={{ marginTop: 30 }}
             columns={columns}
-            dataSource={studentList}
+            dataSource={checkDetail?.missingStudentList}
             pagination={{ pageSize: 8 }}
             rowKey={(record) => record.id}
           />
@@ -162,6 +142,13 @@ const CheckDetails = memo((props) => {
 
   function handleChange(value) {
     setCurCheck(value);
+  }
+
+  function getCheckDetail() {
+    request(`scweb/checkIn/detail?checkInInfoId=${curCheck}`).then((res) => {
+      console.log(res);
+      setCheckDetail(res.data);
+    });
   }
 });
 
