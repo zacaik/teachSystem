@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { Table, Tag, Button, Modal, Select, Input } from "antd";
+import { Table, Tag, Select } from "antd";
 import { Column } from "@ant-design/plots";
 import { useHttp } from "../../utils/http";
 import { useLocation } from "react-router-dom";
@@ -38,7 +38,7 @@ const ClassTestDetails = memo((props) => {
     { title: "学生姓名", dataIndex: "studentName" },
     {
       title: "班级",
-      dataIndex: "class",
+      dataIndex: "belongClass",
     },
     { title: "学号", dataIndex: "jobId" },
     {
@@ -48,8 +48,6 @@ const ClassTestDetails = memo((props) => {
   ];
 
   const { Option } = Select;
-  const { Search } = Input;
-
   const request = useHttp();
   let location = useLocation();
 
@@ -133,13 +131,6 @@ const ClassTestDetails = memo((props) => {
           </div>
         </div>
         <div className="studentList" style={{ flex: 1 }}>
-          <Search
-            placeholder="按学号或姓名搜索学生"
-            // onSearch={handleSearch}
-            // onChange={handleChange}
-            enterButton
-            style={{ width: 250, margin: 10 }}
-          />
           <Table
             columns={studentColumns}
             dataSource={curTestRes}

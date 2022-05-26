@@ -1,62 +1,50 @@
 import React, { memo, useEffect, useState } from "react";
 import { BriefWrapper } from "./style";
-import { Select, Card, Button, Statistic, Table, Progress } from "antd";
-import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { Select, Card, Statistic, Table, Progress } from "antd";
+import { useSelector, shallowEqual } from "react-redux";
 import {
   TeamOutlined,
-  ArrowDownOutlined,
   ArrowUpOutlined,
 } from "@ant-design/icons";
-import { http } from "../../utils/http";
-import { Pie, Column, Bar, G2 } from "@ant-design/plots";
+import { useHttp } from "../../utils/http";
+import { Pie, Column, G2 } from "@ant-design/plots";
+import { useNavigate } from "react-router-dom";
 
 const Brief = memo((props) => {
-  const [studentSummary, setStudentSummary] = useState({});
+  const navigate = useNavigate();
+  const request = useHttp();
   const { currentClass } = props;
   const { Option } = Select;
+  const G = G2.getEngine("canvas");
 
-  console.log(props);
-
-  let { user } = useSelector(
-    (state) => ({
-      user: state.user.user,
-    }),
-    shallowEqual
-  );
+  const [classSummary, setClassSummary] = useState(null);
+  const [curTest, setCurTest] = useState("");
+  const [testData, setTestData] = useState([]);
+  const [testList, setTestList] = useState([]);
 
   const getData = async () => {
-    const studentSummary = await http("getStudentSummary", {});
-    setStudentSummary(studentSummary);
+    const res = await request(`scweb/overview?classId=${currentClass}`);
+    setClassSummary(res.data);
   };
 
   useEffect(() => {
-    // getData();
-  }, []);
-  const G = G2.getEngine("canvas");
+    currentClass && getData();
+    currentClass && getTestList();
+  }, [currentClass]);
+
+  useEffect(() => {
+    curTest && getTestRes();
+  }, [curTest]);
+
 
   const genderData = [
     {
       sex: "男",
-      sold: 0.45,
+      sold: classSummary?.maleCount,
     },
     {
       sex: "女",
-      sold: 0.55,
-    },
-  ];
-
-  const studentData = [
-    {
-      type: "一班人数",
-      value: studentSummary?.classOne,
-    },
-    {
-      type: "二班人数",
-      value: studentSummary?.classTow,
-    },
-    {
-      type: "三班人数",
-      value: studentSummary?.classThree,
+      sold: classSummary?.femaleCount,
     },
   ];
 
@@ -104,93 +92,8 @@ const Brief = memo((props) => {
     ],
   };
 
-  const config = {
-    appendPadding: 0,
-    padding: [0, 100, 0, 0],
-    angleField: "value",
-    colorField: "type",
-    radius: 0.9,
-    label: {
-      type: "inner",
-      offset: "-30%",
-      content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
-      style: {
-        fontSize: 14,
-        textAlign: "center",
-      },
-    },
-    interactions: [
-      {
-        type: "element-active",
-      },
-    ],
-  };
-
-  const attendanceData = [
-    {
-      type: "已签到",
-      date: "3-1",
-      value: 108,
-    },
-    {
-      type: "已签到",
-      date: "3-7",
-      value: 104,
-    },
-    {
-      type: "已签到",
-      date: "3-14",
-      value: 99,
-    },
-    {
-      type: "已签到",
-      date: "3-21",
-      value: 100,
-    },
-    {
-      type: "已签到",
-      date: "3-28",
-      value: 110,
-    },
-    {
-      type: "已签到",
-      date: "4-4",
-      value: 112,
-    },
-    {
-      type: "未签到",
-      date: "3-1",
-      value: 12,
-    },
-    {
-      type: "未签到",
-      date: "3-7",
-      value: 16,
-    },
-    {
-      type: "未签到",
-      date: "3-14",
-      value: 21,
-    },
-    {
-      type: "未签到",
-      date: "3-21",
-      value: 20,
-    },
-    {
-      type: "未签到",
-      date: "3-28",
-      value: 10,
-    },
-    {
-      type: "未签到",
-      date: "4-4",
-      value: 8,
-    },
-  ];
-
   const attendanceConfig = {
-    data: attendanceData,
+    data: handleCheckInData(),
     width: 1000,
     xField: "date",
     yField: "value",
@@ -211,33 +114,6 @@ const Brief = memo((props) => {
     },
   };
 
-  const testData = [
-    {
-      score: "20分以下",
-      人数: 10,
-    },
-    {
-      score: "20-40分",
-      人数: 30,
-    },
-    {
-      score: "40-60分",
-      人数: 25,
-    },
-    {
-      score: "60-80分",
-      人数: 67,
-    },
-    {
-      score: "80-90分",
-      人数: 31,
-    },
-    {
-      score: "90分以上",
-      人数: 12,
-    },
-  ];
-
   const testConfig = {
     data: testData,
     xField: "score",
@@ -253,53 +129,23 @@ const Brief = memo((props) => {
     {
       title: "姓名",
       dataIndex: "name",
+      render: (text, record) => (
+        <a
+          onClick={() =>
+            navigate(`../student/detail/${record.id}`, { state: record })
+          }
+        >
+          {text}
+        </a>
+      ),
     },
     {
       title: "学号",
-      dataIndex: "studentId",
+      dataIndex: "jobId",
     },
     {
       title: "未打卡次数",
       dataIndex: "absentNumber",
-    },
-  ];
-
-  const absentData = [
-    {
-      key: "1",
-      name: "李俊燃",
-      studentId: "1806010228",
-      absentNumber: 10,
-    },
-    {
-      key: "2",
-      name: "李俊燃",
-      studentId: "1806010228",
-      absentNumber: 9,
-    },
-    {
-      key: "3",
-      name: "李俊燃",
-      studentId: "1806010228",
-      absentNumber: 8,
-    },
-    {
-      key: "4",
-      name: "李俊燃",
-      studentId: "1806010228",
-      absentNumber: 7,
-    },
-    {
-      key: "5",
-      name: "李俊燃",
-      studentId: "1806010228",
-      absentNumber: 6,
-    },
-    {
-      key: "6",
-      name: "李俊燃",
-      studentId: "1806010228",
-      absentNumber: 5,
     },
   ];
 
@@ -314,14 +160,14 @@ const Brief = memo((props) => {
           <div className="static-number">
             <Statistic
               title="男生人数"
-              value={studentSummary.male}
+              value={classSummary?.maleCount}
               prefix={<TeamOutlined />}
               className="static-number-item"
               key={"male"}
             />
             <Statistic
               title="女生人数"
-              value={studentSummary.female}
+              value={classSummary?.femaleCount}
               prefix={<TeamOutlined />}
               className="static-number-item"
               key={"female"}
@@ -335,35 +181,11 @@ const Brief = memo((props) => {
           <div className="static-number">
             <Statistic
               title="班级总人数"
-              value={studentSummary.sum}
+              value={classSummary?.femaleCount + classSummary?.maleCount}
               prefix={<TeamOutlined />}
               className="static-number-item"
               key={"all"}
             />
-            <Statistic
-              title="二班人数"
-              value={studentSummary.classTow}
-              prefix={<TeamOutlined />}
-              className="static-number-item"
-              key={"tow"}
-            />
-            <Statistic
-              title="三班人数"
-              value={studentSummary.classThree}
-              className="static-number-item"
-              prefix={<TeamOutlined />}
-              key={"three"}
-            />
-            <Statistic
-              title="一班人数"
-              value={studentSummary.classOne}
-              className="static-number-item"
-              prefix={<TeamOutlined />}
-              key={"one"}
-            />
-          </div>
-          <div className="pieWrapper">
-            <Pie {...config} data={studentData} />
           </div>
         </div>
       </Card>
@@ -378,9 +200,9 @@ const Brief = memo((props) => {
         <div className="topAbsentStudent">
           <Table
             columns={columns}
-            dataSource={absentData}
+            dataSource={handleUnCheckedStudentData()}
             bordered
-            pagination={false}
+            pagination={{ pageSize: 5 }}
             title={() => "缺勤排行榜"}
           />
         </div>
@@ -395,14 +217,16 @@ const Brief = memo((props) => {
           <div className="selecter-wrapper">
             <div className="selecter-item">
               选择测验：
-              <Select style={{ width: 200 }}>
-                {/* {classList.map((item) => {
-                  return (
-                    <Option value={item} key={item}>
-                      {item}
-                    </Option>
-                  );
-                })} */}
+              <Select
+                style={{ width: 300 }}
+                value={curTest}
+                onChange={(value) => {
+                  setCurTest(value);
+                }}
+              >
+                {testList.map((item) => {
+                  return <Option value={item.id}>{item.name}</Option>;
+                })}
               </Select>
             </div>
           </div>
@@ -410,28 +234,31 @@ const Brief = memo((props) => {
         </div>
         <div className="qaWrapper" style={{ width: "30%" }}>
           <h3 className="qaTitle">课堂互动统计：</h3>
-          <Statistic title="总互动次数" value={14} className="qaItem" />
+          <Statistic
+            title="总互动次数"
+            value={classSummary?.totalInterCount}
+            className="qaItem"
+          />
           <Statistic
             title="有效互动人次"
-            value={1321}
+            value={classSummary?.totalReplayCount}
             prefix={<TeamOutlined />}
             className="qaItem"
           />
           <div className="trend qaItem">
             <Statistic
               title="有效互动占比"
-              value={75}
+              value={Number(classSummary?.goodInterPercentage.split("%")[0])}
               formatter={(value) => {
                 return <Progress type="circle" percent={value} />;
               }}
             />
             <Statistic
               title="周同比"
-              value={9.3}
+              value={classSummary?.weekComparePercentage}
               precision={2}
               valueStyle={{ color: "#3f8600" }}
               prefix={<ArrowUpOutlined />}
-              suffix="%"
               style={{ marginTop: 40, marginLeft: 20 }}
             />
           </div>
@@ -440,8 +267,88 @@ const Brief = memo((props) => {
     </BriefWrapper>
   );
 
-  function handleChange(value) {
-    console.log(`selected ${value}`);
+  function handleCheckInData() {
+    const res = [];
+    if (!classSummary?.sortedCheckInCountMap) {
+      return res;
+    }
+    const dateArr = Object.keys(classSummary?.sortedCheckInCountMap);
+    dateArr.forEach((item) => {
+      res.push({
+        type: "已签到",
+        date: item,
+        value:
+          Number(classSummary?.sortedCheckInCountMap[item].split("%")[0]) / 100,
+      });
+    });
+    dateArr.forEach((item) => {
+      res.push({
+        type: "未签到",
+        date: item,
+        value:
+          1 -
+          Number(classSummary?.sortedCheckInCountMap[item].split("%")[0]) / 100,
+      });
+    });
+    return res;
+  }
+
+  function handleUnCheckedStudentData() {
+    if (!classSummary?.rankMap) {
+      return [];
+    }
+    const numArr = Object.keys(classSummary?.rankMap);
+    const res = [];
+    numArr.forEach((num) => {
+      classSummary?.rankMap[num].forEach((item) => {
+        res.push({ ...item, absentNumber: num, key: item.id });
+      });
+    });
+    return res;
+  }
+
+  function getTestList() {
+    request("scweb/schoolClassTest", {
+      data: { classId: currentClass },
+    }).then((res) => {
+      setTestList(res.data);
+      setCurTest(res.data[0].id);
+    });
+  }
+
+  function getTestRes() {
+    request(`scweb/schoolClassTest/${curTest}`).then((res) => {
+      setTestData(handleTestScore(res.data.scoreIntervalMap));
+    });
+  }
+
+  function handleTestScore(map) {
+    return [
+      {
+        score: "20分以下",
+        人数: map[0],
+      },
+      {
+        score: "20-40分",
+        人数: map[1],
+      },
+      {
+        score: "40-60分",
+        人数: map[2],
+      },
+      {
+        score: "60-80分",
+        人数: map[3],
+      },
+      {
+        score: "80-90分",
+        人数: map[4],
+      },
+      {
+        score: "90分以上",
+        人数: map[5],
+      },
+    ];
   }
 });
 
