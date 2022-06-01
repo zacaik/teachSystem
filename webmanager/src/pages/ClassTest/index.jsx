@@ -23,10 +23,13 @@ const ClassTest = memo((props) => {
   const navigate = useNavigate();
   const request = useHttp();
   const [form] = Form.useForm();
+  const [addForm] = Form.useForm();
 
   const [categoryList, setCategoryList] = useState([]);
   const [testList, setTestList] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isDelModalVisible, setIsDelModalVisible] = useState(false);
   const [curCate, setCurCate] = useState(null);
 
   useEffect(() => {
@@ -41,7 +44,16 @@ const ClassTest = memo((props) => {
     {
       title: "操作",
       render: (text, record) => (
-        <a onClick={() => handleTestClick(record)}>发布随机测验</a>
+        <>
+          <a onClick={() => handleTestClick(record)}>发布随机测验</a>
+          <Button
+            onClick={() => handleDeleteCategory(record)}
+            danger
+            style={{ marginLeft: 20 }}
+          >
+            删除
+          </Button>
+        </>
       ),
     },
   ];
@@ -119,12 +131,21 @@ const ClassTest = memo((props) => {
 
   return (
     <ClassTestWrapper>
-      <div className="actionHeader" style={{ marginTop: 15 }}>
-        <Upload {...uploadProps}>
-          <Button icon={<UploadOutlined />} type="primary">
-            导入题库
-          </Button>
-        </Upload>
+      <div className="actionWrapper" style={{ display: "flex" }}>
+        <div className="actionHeader" style={{ marginTop: 15 }}>
+          <Upload {...uploadProps}>
+            <Button icon={<UploadOutlined />} type="primary">
+              导入题库
+            </Button>
+          </Upload>
+        </div>
+        <Button
+          type="primary"
+          style={{ marginTop: 15, marginLeft: 15 }}
+          onClick={handleAddCategory}
+        >
+          新增章节
+        </Button>
       </div>
       <Table
         className="components-table-demo-nested"
@@ -148,7 +169,7 @@ const ClassTest = memo((props) => {
             <Input />
           </Form.Item>
           <Form.Item name="startTime" label="开始时间">
-          <DatePicker showTime />
+            <DatePicker showTime />
           </Form.Item>
           <Form.Item name="lastTime" label="测验时长">
             <InputNumber min={0} addonAfter="min" />
@@ -163,6 +184,33 @@ const ClassTest = memo((props) => {
             <InputNumber min={0} addonAfter="个" />
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title="新增章节"
+        visible={isAddModalVisible}
+        onCancel={handleAddCancel}
+        onOk={handleAddOk}
+        okText="确定"
+        cancelText="取消"
+      >
+        <Form form={addForm}>
+          <Form.Item name="sequence" label="章节次序">
+            <InputNumber min={1} addonAfter="章" addonBefore="第" />
+          </Form.Item>
+          <Form.Item name="name" label="章节名称">
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="注意"
+        visible={isDelModalVisible}
+        onOk={handleDelOk}
+        onCancel={handleDelCancel}
+        okText="确认"
+        cancelText="取消"
+      >
+        <p>确定要删除该章节吗？删除后，将不能发布该章节对应测验</p>
       </Modal>
     </ClassTestWrapper>
   );
@@ -219,9 +267,59 @@ const ClassTest = memo((props) => {
       });
   }
 
+  function handleAddCancel() {
+    setIsAddModalVisible(false);
+  }
+
+  function handleAddOk() {
+    const value = addForm.getFieldsValue(true);
+    console.log(curCate);
+    request(`scweb/category`, {
+      data: { ...value, classId: currentClass },
+      method: "POST",
+    })
+      .then(() => {
+        message.success("添加成功");
+        setIsAddModalVisible(false);
+        getCategory();
+      })
+      .catch((err) => {
+        message.error(err);
+        setIsAddModalVisible(false);
+      });
+  }
+
   function handleTestClick(record) {
     setCurCate(record);
     setIsModalVisible(true);
+  }
+
+  function handleAddCategory() {
+    setIsAddModalVisible(true);
+  }
+
+  function handleDeleteCategory(record) {
+    setCurCate(record);
+    setIsDelModalVisible(true);
+  }
+
+  function handleDelOk() {
+    request(`scweb/category/${curCate.id}`, {
+      method: "DELETE",
+    })
+      .then(() => {
+        message.success("删除成功");
+        setIsDelModalVisible(false);
+        getCategory();
+      })
+      .catch((err) => {
+        message.error(err);
+        setIsDelModalVisible(false);
+      });
+  }
+
+  function handleDelCancel() {
+    setIsDelModalVisible(false);
   }
 });
 

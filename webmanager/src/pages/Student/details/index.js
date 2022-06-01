@@ -212,7 +212,7 @@ const StudentDetail = memo((props) => {
     if (studentDetail) {
       return studentDetail.testReportVOList.map((item) => {
         return {
-          index: item.category.name,
+          index: item.schoolClassTestName.name,
           得分: item.score,
         };
       });
