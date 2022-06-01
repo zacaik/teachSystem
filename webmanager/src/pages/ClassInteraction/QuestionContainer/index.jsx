@@ -22,7 +22,7 @@ export default function QuestionContainer(props) {
 
   const fetchInteractList = async (currentClass) => {
     const interactList = await request("scweb/interaction", {
-      data: { classId: currentClass || 1, sort: 1 },
+      data: { classId: currentClass, sort: 1 },
     });
     dispatch(setQuestionList(interactList.data));
   };

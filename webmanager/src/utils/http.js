@@ -10,7 +10,7 @@ export const http = async (
   const config = {
     method: "GET",
     headers: {
-      Authorization: token ? `Bearer ${token}` : "",
+      Authorization: token || "",
       "Content-Type": data ? "application/json" : "",
     },
     ...customConfig,
